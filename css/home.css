@@ -1,0 +1,47 @@
+#home {
+	
+/*	width: 480px;*/
+}
+
+#home p {
+	width: 90%;
+	margin: auto;
+	text-align: center;
+	margin-bottom: 2em;
+}
+
+#homeList {
+	margin: 0 auto;
+	font-size: 1em;
+	width: 26em;
+}
+
+/* separation entre les items de la liste */
+#homeList .ui-li {
+	margin-bottom: .6em;
+	border-radius: .5em;
+}
+
+/* centrer les titres dans la liste */
+#homeList .ui-li a.ui-link-inherit {
+	padding: .8em 1em .8em 1em;
+}
+
+/* icone de la liste */
+#homeList .ui-li-thumb {
+	max-width: auto;
+	max-height: auto;
+	left: 1em;
+	top: 0em;
+}
+
+/* texte des items de la liste */
+#homeList .ui-li-heading {
+	padding: 0 0 0 4em;
+	font-size: 1.5em;
+	margin: .4em 0 0;
+}
+
+#homeList .ui-icon {
+	height: 18px;
+}
