@@ -12,4 +12,15 @@
 	
 .ui-header .ui-title {
 	margin: .6em auto .8em auto;
-}	
+}
+
+
+.ui-header .menuButton {
+	width: 36px;
+	height: 36px;
+	background-image:url(images/icons-18-white.png);
+	background-repeat:no-repeat;
+	background-position:-864px 0px;
+	background-size: auto 100%;
+	top: 0px;
+}
