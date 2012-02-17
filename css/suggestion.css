@@ -14,10 +14,17 @@
 		width: 90%;
 	}
 	
-	
-	#suggestion ul{
+	#ingredients {
 		text-align: left;
+		width: 100%;
+		margin: 0 auto 0 auto;
 	}
+	
+	#recipe {
+		width: 100%;
+		margin: 0 auto 0 auto;
+	}
+		
 }
 
 @media screen and (min-width: 480px){
@@ -27,25 +34,47 @@
 	}
 	
 	#suggestion img{
-		width: 50%;
+		width: 30%;
 		height: auto;
 	}
 	
 	#suggestion hr{
 		margin: 2em auto 2em auto;
-		width: 70%;
+		width: 50%;
 	}
-
-	#recipe {
-		position: relative;
-		left: 20%;
-	}
-
-	#suggestion ul{
+	
+	#ingredients {
 		text-align: left;
+		margin: 0 auto 0 auto;
+		width: 50%;
 	}
+	
+	
+	#recipe {
+		width: 50%;
+		margin: 0 auto 0 auto;
+	}
+	
+	
 
 }
 
+/* pour toutes les résolutions*/
 
 
+#suggestion ul{
+	text-align: left;
+	list-style-image:url('../res/img/checkMark.gif');
+}
+
+#ingredients {
+	text-align: left;
+}
+#ingredients span:FIRST-CHILD{
+	font-weight: bold;
+}
+
+#ingredientsList {
+	text-align: left;
+	font-style: italic;
+}
