@@ -12,9 +12,23 @@
 	
 .ui-header .ui-title {
 	margin: .6em auto .8em auto;
+	font-size: 1em;
 }
 
+.ui-header .menuButton {
+	width: 36px;
+	height: 80%;
+	background-image:url(../res/img/home-icon.gif);
+	background-repeat:no-repeat;
+	background-size: auto 100%;
+	top: 0px;
+	margin: 4px 0 0 4px;
+	position: absolute;
+	
+	
+}
 
+/*
 .ui-header .menuButton {
 	width: 36px;
 	height: 36px;
@@ -24,3 +38,4 @@
 	background-size: auto 100%;
 	top: 0px;
 }
+*/
