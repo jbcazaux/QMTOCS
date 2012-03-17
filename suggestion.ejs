@@ -1,0 +1,49 @@
+
+
+	<div id='suggestion_<%= id %>' class='suggestion' data-role="page" data-dom-cache="true">
+
+		<div data-role="header">
+			<div>
+				<a href="index.html" class='menuButton' data-direction="reverse"></a>
+				<h1 class='ui-title'>La suggestion de ce soir</h1>
+			</div>
+		</div>
+
+		<div data-role="content">
+			<div class='title'>
+				<a href="#" class='prev'></a>
+				<h2><%= title %></h2>
+				<a href="#" class='next'></a>
+			</div>
+			
+			<div class='titleSeparator' style='clear:both'></div>
+			<div class='blur'></div>
+			
+			<div  class='scrollable' data-scroll="y">
+				<img src='<%= img %>'></img>
+	 			<hr /> 
+				
+				<div class='details'>
+					<div class='ingredients'>
+						<span >Ingrédients: </span>
+						<span class='ingredientsList'>
+							<% for(var i=0; i<ingredients.length; i++) {%>
+							   <%= ingredients[i] %>,
+							<% } %>
+						</span>
+					</div>
+					<div class='recipe'>
+						<ul>
+							<% for(var i=0; i<recipeSteps.length; i++) {%>
+							   <li><%= recipeSteps[i] %></li>
+							<% } %>
+						</ul>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+
+
+	</div>
+

@@ -1,0 +1,8 @@
+{
+	"id" : 2,
+	"title": "Tomates farcies et riz",
+	"ingredients": ["tomates", "farce", "riz"],
+	"recipeSteps": ["Evider les tomates", "Remplir les tomates avec la farce", "Faire chauffer les tomates 1h au four à 200°", "Faire cuire le riz", "C'est prêt !"],
+	"img": "remote/tomatesFarcies.jpg"
+}
+					

@@ -1,83 +1,149 @@
 @media screen and (max-width:480px){
-	#suggestion {
+	.suggestion {
 		text-align: center;
 		margin: auto;
 	}
 	
-	#suggestion img{
+	.suggestion img{
 		width: 90%;
 		height: auto;
 	}
 	
-	#suggestion hr{
+	.suggestion hr{
 		margin: 2em auto 2em auto;
 		width: 90%;
 	}
 	
-	#ingredients {
+	.ingredients {
 		text-align: left;
 		width: 100%;
 		margin: 0 auto 0 auto;
 	}
 	
-	#recipe {
+	.recipe {
 		width: 100%;
 		margin: 0 auto 0 auto;
 	}
-		
+	
+	.suggestion .prev, .suggestion .next{
+/* 		margin: 1.18em 0 1.18em 0; */
+		height: 20px;
+	}	
 }
 
 @media screen and (min-width: 480px){
-	#suggestion {
+	.suggestion {
 		text-align: center;
 		margin: auto;
 	}
 	
-	#suggestion img{
+	.suggestion img{
 		width: 30%;
 		height: auto;
 		float: left;
 		margin-left: 10%;
 	}
 	
-	#suggestion hr{
+	.suggestion hr{
 		display:none;
 	}
 	
-	#details {
-		margin: 0 0 0 45%;
+	.details {
+		margin: 1em 0 0 45%;
 	}
 	
-	#ingredients {
+	.ingredients {
 		text-align: left;
 		margin: 0 auto 0 auto;
 	}
 	
 	
-	#recipe {
+	.recipe {
 		margin: 0 auto 0 auto;
 	}
 	
-	
+	.suggestion .prev, .suggestion .next{
+/* 		margin: 0.83em 0 0.83em 0; */
+		height: 40px;
+	}
 
 }
 
-/* pour toutes les rÃ©solutions*/
+/* pour toutes les résolutions*/
+
+.suggestion .prev, .suggestion .next {
+	background-repeat:no-repeat;
+	background-size: auto 100%;
+	width: 10%;	
+}
+
+.suggestion .prev{
+	float:left;
+	background-image:url(../res/img/fleche_rouge.png);
+	-webkit-transform:rotate(180deg);
+	background-position: right; 
+}
+
+.suggestion .next{
+	float:right;
+	background-position:right;
+	background-image:url(../res/img/fleche_rouge.png);
+}
 
 
-#suggestion ul{
+.suggestion h2{
+	float:left;
+	width:80%;
+}
+
+.suggestion ul{
 	text-align: left;
 	list-style-image:url('../res/img/checkMark.gif');
 }
 
-#ingredients {
+.ingredients {
 	text-align: left;
 }
-#ingredients span:FIRST-CHILD{
+.ingredients span:FIRST-CHILD{
 	font-weight: bold;
 }
 
-#ingredientsList {
+.ingredientsList {
 	text-align: left;
 	font-style: italic;
+}
+
+.blur {
+	width: 100%;
+	height: 1em;
+	background-image: -webkit-gradient(
+	  linear, left top, left bottom, from(rgba(240,240,240,1)),
+	  to(rgba(240,240,240,0.2))
+	);
+	position: relative;
+/* 	top: 1em; */
+	z-index: 50;
+	
+}
+
+.scrollable {
+	margin-top: -1em;
+}
+
+.scrollable img{
+	margin-top: 1em;
+}
+
+
+.title>h2, .title>.next, .title>.prev{
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.titleSeparator {
+	width: 100%;
+	height: 1px;
+	border-style: inset;
+	border-width: 1px;	
+	
 }

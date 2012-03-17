@@ -1,0 +1,8 @@
+{
+	"id" : 3,
+	"title": "Cordon bleu et pates3",
+	"ingredients": ["cordon bleu", "pates"],
+	"recipeSteps": ["Faire cuire les pates", "Faire chauffer le cordon bleu", "saler et poivrer", "C'est prêt !"],
+	"img": "remote/cordonbleu.jpg"
+}
+					

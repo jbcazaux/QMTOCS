@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html>
 <head>
 <title>Que Mange-t'on ce soir ?</title>
@@ -7,13 +7,15 @@
 
 <link rel="stylesheet" href="css/jquery.mobile-1.0.1.min.css" />
 <link rel="stylesheet" href="css/style.css" />
+<link rel="stylesheet" href="css/jquery.mobile.scrollview.css" />
 
 <script src="js/libs/jquery-1.7.1.min.js"></script>
 <script src="js/libs/jquery.mobile-1.0.1.min.js"></script>
+
 </head>
 <body>
 
-	<div id='suggestion' data-role="page" data-dom-cache="true">
+	<div id='suggestion_0' class='suggestion' data-role="page" data-dom-cache="true">
 
 		<div data-role="header">
 			<div>
@@ -23,23 +25,46 @@
 		</div>
 
 		<div data-role="content">
-			<h2>Cordon bleu et pates</h2>
-			<img src='remote/cordonbleu.jpg'></img>
- 			<hr /> 
+			<div class='title'>
+				<a href="#" class='prev'></a>
+				<h2>Cordon bleu et pates</h2>
+				<a href="#" class='next'></a>
+			</div>
 			
-			<div id='details'>
-				<div id='ingredients'>
-					<span >Ingrédients: </span><span id='ingredientsList'>Cordon bleu, pates</span>
-				</div>
-				<div id='recipe'>
-					<ul>
-						<li>Faire cuire les pates</li>
-						<li>Faire chauffer le cordon bleu</li>
-						<li>saler et poivrer</li>
-						<li>C'est prêt !</li>
-					</ul>
+			<div class='titleSeparator' style='clear:both'></div>
+			<div class='blur'></div>
+			
+			<div  class='scrollable' data-scroll="y">
+				<img src='remote/cordonbleu.jpg'></img>
+	 			<hr /> 
+				
+				<div class='details'>
+					<div class='ingredients'>
+						<span >Ingrédients: </span><span class='ingredientsList'>Cordon bleu, pates</span>
+					</div>
+					<div class='recipe'>
+						<ul>
+						
+							<li>Faire cuire les pates</li>
+							<li>Faire chauffer le cordon bleu</li>
+							<li>saler et poivrer</li>
+							<li>C'est prêt !</li>
+							<li>C'est prêt !</li>
+							<li>C'est prêt !</li>
+							<li>C'est prêt !</li>
+							<li>C'est prêt !</li>
+							<li>C'est prêt !</li>
+							<li>C'est prêt !</li>
+							<li>C'est prêt !</li>
+							<li>C'est prêt !</li>
+							<li>C'est prêt !</li>
+							<li>C'est prêt !</li>
+							<li>C'est prêt !</li>
+						</ul>
+					</div>
 				</div>
 			</div>
+			
 		</div>
 
 
