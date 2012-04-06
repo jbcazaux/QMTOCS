@@ -15,7 +15,7 @@ $( ".prev" ).live('click', function(e){
 	var id = parseInt(page.attr('id').split("_").pop());
 	
 	console.log('change page to : suggestion_' + (id-1));
-	$.mobile.changePage($('#suggestion_' + (id-1)));
+	$.mobile.changePage($('#suggestion_' + (id-1)), {reverse: true});
 	return false;
 	
 });
