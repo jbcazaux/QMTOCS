@@ -1,31 +1,15 @@
-function ResizePageContentHeight(page) {
-	var $page = $(page),
-		$content = $page.children( ".ui-content" ),
-		hh = $page.children( ".ui-header" ).outerHeight() || 0,
-		fh = $page.children( ".ui-footer" ).outerHeight() || 0,
-		pt = parseFloat($content.css( "padding-top" )),
-		pb = parseFloat($content.css( "padding-bottom" )),
-		wh = window.innerHeight;
-
-	$content.height( 'auto' ).height(wh - (hh + fh) - (pt + pb));
-}
+function adjustHeight(scrollableView) {
+	if (scrollableView.offset()){
+		scrollableView.height( 'auto' ).height( window.innerHeight - scrollableView.offset().top );
+		scrollableView.scrollview( 'scrollTo', 0, 0, 300 );
+	}
+};
 
 $( ":jqmData(role='page')" ).live( "pageshow", function(event) {
 	var $page = $( this );
 
-	// For the demos that use this script, we want the content area of each
-	// page to be scrollable in the 'y' direction.
-
-	//$page.find( ".ui-content" ).attr( "data-" + $.mobile.ns + "scroll", "y" );
-
-	// This code that looks for [data-scroll] will eventually be folded
-	// into the jqm page processing code when scrollview support is "official"
-	// instead of "experimental".
-
 	$page.find( ":jqmData(scroll):not(.ui-scrollview-clip)" ).each(function () {
 		var $this = $( this );
-		// XXX: Remove this check for ui-scrolllistview once we've
-		//      integrated list divider support into the main scrollview class.
 		if ( $this.hasClass( "ui-scrolllistview" ) ) {
 			$this.scrolllistview();
 		} else {
@@ -43,13 +27,38 @@ $( ":jqmData(role='page')" ).live( "pageshow", function(event) {
 		}
 	});
 
-	// For the demos, we want to make sure the page being shown has a content
-	// area that is sized to fit completely within the viewport. This should
-	// also handle the case where pages are loaded dynamically.
-
-	ResizePageContentHeight( event.target );
+	adjustHeight($('.ui-scrollview-clip', this));
 });
 
 $( window ).bind( "orientationchange", function( event ) {
-	ResizePageContentHeight( $( ".ui-page" ) );
+
+	window.scrollTo( 0, 0);
+	var nPageH = $(document).height();
+	 var nViewH = window.outerHeight;
+	 if (nViewH > nPageH) {
+	   nViewH -= 250;
+	   $('BODY').css('height',nViewH + 'px');
+	 }
+	 window.scrollTo(0,1);
+
+	
+	setTimeout( function() {
+		
+		
+		$( ".ui-page-active .ui-title" ).html('size: ' + window.innerHeight);
+		adjustHeight($('.ui-scrollview-clip', $( ".ui-page-active" )));
+		}, 400 );
+	
+});
+
+$(document).ready(function(){
+	
+	window.scrollTo( 0, 0 );
+	var nPageH = $(document).height();
+	 var nViewH = window.outerHeight;
+	 if (nViewH > nPageH) {
+	   nViewH -= 250;
+	   $('BODY').css('height',nViewH + 'px');
+	 }
+	 window.scrollTo(0,1);
 });
