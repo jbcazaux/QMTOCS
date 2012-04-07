@@ -69,7 +69,7 @@
 
 }
 
-/* pour toutes les résolutions*/
+/* pour toutes les rï¿½solutions*/
 
 .suggestion .prev, .suggestion .next {
 	background-repeat:no-repeat;
@@ -79,7 +79,7 @@
 
 .suggestion .prev{
 	float:left;
-	background-image:url(../res/img/fleche_rouge.png);
+	background-image:url(../img/fleche_rouge.png);
 	-webkit-transform:rotate(180deg);
 	background-position: right; 
 }
@@ -87,7 +87,7 @@
 .suggestion .next{
 	float:right;
 	background-position:right;
-	background-image:url(../res/img/fleche_rouge.png);
+	background-image:url(../img/fleche_rouge.png);
 }
 
 
@@ -98,7 +98,7 @@
 
 .suggestion ul{
 	text-align: left;
-	list-style-image:url('../res/img/checkMark.gif');
+	list-style-image:url('../img/checkMark.gif');
 }
 
 .ingredients {

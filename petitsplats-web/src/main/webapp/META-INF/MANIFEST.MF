@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Class-Path: aopalliance-1.0.jar commons-lang3-3.1.jar commons-logging-
+ 1.1.1.jar jackson-core-asl-1.9.5.jar jackson-mapper-asl-1.9.5.jar log
+ 4j-over-slf4j-1.6.4.jar slf4j-api-1.6.4.jar slf4j-simple-1.6.4.jar sp
+ ring-aop-3.1.0.RELEASE.jar spring-asm-3.1.0.RELEASE.jar spring-beans-
+ 3.1.0.RELEASE.jar spring-context-3.1.0.RELEASE.jar spring-context-sup
+ port-3.1.0.RELEASE.jar spring-core-3.1.0.RELEASE.jar spring-expressio
+ n-3.1.0.RELEASE.jar spring-web-3.1.0.RELEASE.jar spring-webmvc-3.1.0.
+ RELEASE.jar
+
