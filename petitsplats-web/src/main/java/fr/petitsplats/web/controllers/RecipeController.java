@@ -18,7 +18,7 @@ public class RecipeController {
 
         Recipe recipe = new Recipe();
         recipe.setId(id);
-        recipe.setName("recipe " + id);
+        recipe.setTitle("recipe " + id);
 
         return recipe;
     }
