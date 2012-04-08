@@ -1,4 +1,4 @@
-package fr.petitsplats.core.domain;
+package fr.petitsplats.domain;
 
 public class RecipeStep {
 
