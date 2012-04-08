@@ -9,6 +9,7 @@
 	<name>petitsplats</name>
 	<description>petitsplats parent POM</description>
 	<modules>
+		<module>petitsplats-core</module>
 		<module>petitsplats-web</module>
 	</modules>
 
@@ -45,6 +46,12 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<dependency>
+				<groupId>fr.petitsplats</groupId>
+				<artifactId>petitsplats-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		
 			<!-- Spring dependencies -->
 			<dependency>
 				<groupId>org.springframework</groupId>
