@@ -1,13 +1,19 @@
 package fr.petitsplats.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,10 +23,11 @@ import lombok.Setter;
 public class Recipe extends AbstractEntity {
 
     @Id
+    @Column(name = "recipe_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter
     @Setter
-    private int id;
+    private Integer id;
 
     @Getter
     @Setter
@@ -30,15 +37,21 @@ public class Recipe extends AbstractEntity {
     @Setter
     private Integer imageId;
 
-    @Transient
     @Getter
     @Setter
+    @ManyToMany
+    @JoinTable(name = "recipe_ingredients", joinColumns = { @JoinColumn(name = "recipe_id", referencedColumnName = "recipe_id") }, inverseJoinColumns = { @JoinColumn(name = "ingredient_id", referencedColumnName = "ingredient_id") })
     private List<Ingredient> ingredients;
 
-    @Transient
     @Getter
     @Setter
-    private List<RecipeStep> recipeSteps;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "recipe_recipestep", joinColumns = { @JoinColumn(name = "recipe_id", referencedColumnName = "recipe_id") }, inverseJoinColumns = { @JoinColumn(name = "recipestep_id", referencedColumnName = "recipestep_id") })
+    private List<RecipeStep> recipeSteps = new ArrayList<RecipeStep>();
+
+    public void addRecipeStep(RecipeStep rs) {
+        recipeSteps.add(rs);
+    }
 
     @Override
     public int hashCode() {
