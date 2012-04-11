@@ -2,10 +2,13 @@ package fr.petitsplats.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,6 +20,9 @@ import javax.persistence.Table;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
 
 @Entity
 @Table(name = "recipe")
@@ -39,15 +45,21 @@ public class Recipe extends AbstractEntity {
 
     @Getter
     @Setter
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "recipe_ingredients", joinColumns = { @JoinColumn(name = "recipe_id", referencedColumnName = "recipe_id") }, inverseJoinColumns = { @JoinColumn(name = "ingredient_id", referencedColumnName = "ingredient_id") })
-    private List<Ingredient> ingredients;
+    private List<Ingredient> ingredients = new ArrayList<Ingredient>();
+
+    public void addIngredient(Ingredient i) {
+        i.addRecipe(this);
+        ingredients.add(i);
+    }
 
     @Getter
     @Setter
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "recipe_recipestep", joinColumns = { @JoinColumn(name = "recipe_id", referencedColumnName = "recipe_id") }, inverseJoinColumns = { @JoinColumn(name = "recipestep_id", referencedColumnName = "recipestep_id") })
-    private List<RecipeStep> recipeSteps = new ArrayList<RecipeStep>();
+    @Sort(type = SortType.NATURAL)
+    private SortedSet<RecipeStep> recipeSteps = new TreeSet<RecipeStep>();
 
     public void addRecipeStep(RecipeStep rs) {
         recipeSteps.add(rs);

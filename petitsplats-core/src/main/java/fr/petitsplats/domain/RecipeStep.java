@@ -10,7 +10,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-public class RecipeStep extends AbstractEntity {
+public class RecipeStep extends AbstractEntity implements
+        Comparable<RecipeStep> {
 
     @Id
     @Column(name = "recipestep_id")
@@ -62,4 +63,11 @@ public class RecipeStep extends AbstractEntity {
         return true;
     }
 
+    @Override
+    public int compareTo(RecipeStep o) {
+        if (id != null) {
+            return id.compareTo(o.getId());
+        }
+        return 1;
+    }
 }
