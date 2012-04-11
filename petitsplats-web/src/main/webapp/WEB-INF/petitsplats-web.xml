@@ -12,7 +12,23 @@
 	<context:annotation-config />
 
 	<context:component-scan base-package="fr.petitsplats.web" />
-<!-- 	<import resource="classpath:petitsplats-core.xml" /> -->
+	<import resource="classpath:petitsplats-core.xml" />
 
+	<jee:jndi-lookup id="dataSource" jndi-name="jdbc/PETITSPLATS_DS" />
 
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="persistenceUnitName" value="petitsplats" />
+		<property name="loadTimeWeaver">
+			<bean
+				class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver" />
+		</property>
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+				<property name="showSql" value="true" />
+				<property name="databasePlatform" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
+			</bean>
+		</property>
+	</bean>
 </beans>
