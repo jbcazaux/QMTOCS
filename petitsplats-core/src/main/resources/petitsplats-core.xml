@@ -10,7 +10,7 @@
 		http://www.springframework.org/schema/tx
 		http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
 
-	<context:component-scan base-package="fr.petitsplats" />
+	<context:component-scan base-package="fr.petitsplats.dao, fr.petitsplats.domain, fr.petitsplats.service" />
 	<context:annotation-config />
 	<tx:annotation-driven />
 

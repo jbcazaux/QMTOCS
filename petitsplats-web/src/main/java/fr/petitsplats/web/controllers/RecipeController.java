@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import fr.petitsplats.dao.RecipeDAO;
 import fr.petitsplats.domain.Recipe;
+import fr.petitsplats.service.RecipeService;
 
 @Controller
 @RequestMapping(value = "/recipe")
 public class RecipeController {
 
     @Autowired
-    private RecipeDAO recipeDAO;
+    private RecipeService recipeService;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
@@ -31,9 +31,9 @@ public class RecipeController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public int createRecipe(Recipe recipe, HttpServletResponse response) {
-        recipeDAO.save(recipe);
+        int id = recipeService.createRecipe(recipe);
         response.setStatus(HttpServletResponse.SC_OK);
-        return recipe.getId();
+        return id;
     }
 
 }
