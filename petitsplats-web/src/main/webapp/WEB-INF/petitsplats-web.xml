@@ -11,7 +11,7 @@
 
 	<context:annotation-config />
 
-	<context:component-scan base-package="fr.petitsplats.web" />
+	<context:component-scan base-package="fr.petitsplats.web.controllers" />
 	<import resource="classpath:petitsplats-core.xml" />
 
 	<jee:jndi-lookup id="dataSource" jndi-name="jdbc/PETITSPLATS_DS" />

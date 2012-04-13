@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import fr.petitsplats.domain.Recipe;
+import fr.petitsplats.exception.ViolationException;
 import fr.petitsplats.service.RecipeService;
 
 @Controller
 @RequestMapping(value = "/recipe")
-public class RecipeController {
+public class RecipeController extends AbstractController {
 
     @Autowired
     private RecipeService recipeService;
@@ -30,8 +31,10 @@ public class RecipeController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public int createRecipe(Recipe recipe, HttpServletResponse response) {
+    public int createRecipe(Recipe recipe, HttpServletResponse response)
+            throws ViolationException {
         int id = recipeService.createRecipe(recipe);
+
         response.setStatus(HttpServletResponse.SC_OK);
         return id;
     }

@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 @Entity
 public class RecipeStep extends AbstractEntity implements
         Comparable<RecipeStep> {
@@ -22,6 +24,7 @@ public class RecipeStep extends AbstractEntity implements
 
     @Getter
     @Setter
+    @NotEmpty
     private String label;
 
     public RecipeStep(String label) {
