@@ -52,9 +52,6 @@ public class RecipeDAOTest {
         cuisson = new RecipeStep("faire cuire les pates");
         pret = new RecipeStep("c'est pret");
 
-        entityManager.persist(jambon);
-        flushSession();
-
         recipe = new Recipe();
         recipe.setTitle("title");
         recipe.setImageId(12);

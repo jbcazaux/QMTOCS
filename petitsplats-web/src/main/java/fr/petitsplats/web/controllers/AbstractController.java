@@ -18,4 +18,10 @@ public abstract class AbstractController {
         return ex.getViolations();
     }
 
+    @ExceptionHandler(ViolationException.class)
+    @ResponseStatus(value = HttpStatus.METHOD_NOT_ALLOWED)
+    public void methodNotAllowed() {
+
+    }
+
 }

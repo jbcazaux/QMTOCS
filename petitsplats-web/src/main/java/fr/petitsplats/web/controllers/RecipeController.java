@@ -2,6 +2,8 @@ package fr.petitsplats.web.controllers;
 
 import javax.servlet.http.HttpServletResponse;
 
+import lombok.Setter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import fr.petitsplats.MethodNotAllowedException;
 import fr.petitsplats.domain.Recipe;
 import fr.petitsplats.exception.ViolationException;
 import fr.petitsplats.service.RecipeService;
@@ -19,6 +22,7 @@ import fr.petitsplats.service.RecipeService;
 public class RecipeController extends AbstractController {
 
     @Autowired
+    @Setter
     private RecipeService recipeService;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -33,7 +37,13 @@ public class RecipeController extends AbstractController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public int createRecipe(@RequestBody Recipe recipe,
-            HttpServletResponse response) throws ViolationException {
+            HttpServletResponse response) throws ViolationException,
+            MethodNotAllowedException {
+
+        if (recipe.getId() != null && recipe.getId() != 0) {
+            throw new MethodNotAllowedException();
+        }
+
         int id = recipeService.createRecipe(recipe);
 
         response.setStatus(HttpServletResponse.SC_OK);
