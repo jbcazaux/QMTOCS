@@ -48,7 +48,7 @@ public class Recipe extends AbstractEntity {
     @Getter
     @Setter
     @NotEmpty
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinTable(name = "recipe_ingredients", joinColumns = { @JoinColumn(name = "recipe_id", referencedColumnName = "recipe_id") }, inverseJoinColumns = { @JoinColumn(name = "ingredient_id", referencedColumnName = "ingredient_id") })
     private List<Ingredient> ingredients = new ArrayList<Ingredient>();
 
@@ -60,7 +60,7 @@ public class Recipe extends AbstractEntity {
     @Getter
     @Setter
     @NotEmpty
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinTable(name = "recipe_recipestep", joinColumns = { @JoinColumn(name = "recipe_id", referencedColumnName = "recipe_id") }, inverseJoinColumns = { @JoinColumn(name = "recipestep_id", referencedColumnName = "recipestep_id") })
     @Sort(type = SortType.NATURAL)
     private SortedSet<RecipeStep> recipeSteps = new TreeSet<RecipeStep>();
