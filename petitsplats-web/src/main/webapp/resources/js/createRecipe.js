@@ -36,10 +36,17 @@ function onStepAddOrDel(){
 
 
 function createRecipe() {
+	
+	var steps = new Array();
+	$('input[name^="step"]').each(function(index){
+		var step = {label: $(this).val()};
+		steps.push(step);
+	});
+	
 	var recipe = {
 		'title' : $('#createRecipeForm > input[name="title"]').val(),
 		'imageId' : $('#createRecipeForm > input[name="imgId"]').val(),
-		'recipeSteps' : [ step1, step2, step3]
+		'recipeSteps' : steps
 	};
 
 	var json = JSON.stringify( recipe );
