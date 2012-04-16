@@ -47,7 +47,7 @@ public class RecipeDAOTest {
     public void setUp() throws Exception {
 
         jambon = new Ingredient();
-        jambon.setName("jambon");
+        jambon.setLabel("jambon");
 
         cuisson = new RecipeStep("faire cuire les pates");
         pret = new RecipeStep("c'est pret");
@@ -69,10 +69,8 @@ public class RecipeDAOTest {
 
         Recipe searchedRecipe = recipeDAO.getEntity(Recipe.class, 1);
         Assert.assertEquals(Integer.valueOf(1), searchedRecipe.getId());
-        Assert.assertEquals(jambon.getName(), searchedRecipe.getIngredients()
-                .get(0).getName());
-        Assert.assertEquals(searchedRecipe.getId(), searchedRecipe
-                .getIngredients().get(0).getRecipes().get(0).getId());
+        Assert.assertEquals(jambon.getLabel(), searchedRecipe.getIngredients()
+                .get(0).getLabel());
         Assert.assertEquals(cuisson.getLabel(), searchedRecipe.getRecipeSteps()
                 .first().getLabel());
         Assert.assertEquals(pret.getLabel(), searchedRecipe.getRecipeSteps()

@@ -1,15 +1,10 @@
 package fr.petitsplats.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -29,16 +24,7 @@ public class Ingredient extends AbstractEntity {
     @Getter
     @Setter
     @NotEmpty
-    private String name;
-
-    @Getter
-    @Setter
-    @ManyToMany(mappedBy = "ingredients", fetch = FetchType.EAGER)
-    private List<Recipe> recipes = new ArrayList<Recipe>();
-
-    public void addRecipe(Recipe r) {
-        recipes.add(r);
-    }
+    private String label;
 
     @Override
     public int hashCode() {

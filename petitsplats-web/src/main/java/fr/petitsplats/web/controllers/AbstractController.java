@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import fr.petitsplats.MethodNotAllowedException;
 import fr.petitsplats.exception.ViolationException;
 
 public abstract class AbstractController {
@@ -18,7 +19,7 @@ public abstract class AbstractController {
         return ex.getViolations();
     }
 
-    @ExceptionHandler(ViolationException.class)
+    @ExceptionHandler(MethodNotAllowedException.class)
     @ResponseStatus(value = HttpStatus.METHOD_NOT_ALLOWED)
     public void methodNotAllowed() {
 

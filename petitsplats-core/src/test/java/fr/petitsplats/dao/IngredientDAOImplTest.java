@@ -1,10 +1,8 @@
 package fr.petitsplats.dao;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -21,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import fr.petitsplats.domain.Ingredient;
-import fr.petitsplats.domain.Recipe;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:/petitsplats-core.xml",
@@ -39,11 +36,9 @@ public class IngredientDAOImplTest {
 
     @Before
     public void setUp() throws Exception {
-        Recipe r = new Recipe();
 
         jambon = new Ingredient();
-        jambon.setName("jambon");
-        jambon.setRecipes(Collections.singletonList(r));
+        jambon.setLabel("jambon");
 
     }
 
@@ -54,9 +49,6 @@ public class IngredientDAOImplTest {
 
         assertTrue(jambon.getId() > 0);
         ingredientDAO.getEntity(Ingredient.class, jambon.getId());
-        assertFalse(CollectionUtils.isEmpty(jambon.getRecipes()));
-        assertNull("recipe must not be persisted", jambon.getRecipes().get(0)
-                .getId());
 
     }
 

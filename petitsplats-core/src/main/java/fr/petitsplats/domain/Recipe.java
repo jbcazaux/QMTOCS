@@ -47,13 +47,13 @@ public class Recipe extends AbstractEntity {
 
     @Getter
     @Setter
+    // @JsonManagedReference
     @NotEmpty
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinTable(name = "recipe_ingredients", joinColumns = { @JoinColumn(name = "recipe_id", referencedColumnName = "recipe_id") }, inverseJoinColumns = { @JoinColumn(name = "ingredient_id", referencedColumnName = "ingredient_id") })
     private List<Ingredient> ingredients = new ArrayList<Ingredient>();
 
     public void addIngredient(Ingredient i) {
-        i.addRecipe(this);
         ingredients.add(i);
     }
 
