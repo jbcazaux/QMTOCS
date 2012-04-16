@@ -78,8 +78,8 @@ function createRecipe() {
 	
 	var ingredients = new Array();
 	$('input[name^="ingredient"]').each(function(index){
-		var ingredient = {name: $(this).val()};
-		if (ingredient.name){
+		var ingredient = {label: $(this).val()};
+		if (ingredient.label){
 			ingredients.push(ingredient);
 		};
 	});
@@ -107,6 +107,32 @@ function createRecipe() {
 	
 	return false;
 }
+
+$(function() {
+	
+	var ingredientsList;
+	
+	$.ajax(
+            {
+              url:"ingredients", 
+              type: "GET", 
+              success: initAutocomplete, 
+              contentType: "application/json"
+            } );  
+
+	function initAutocomplete(data){
+		ingredientsList = data;
+		$('input[name^="ingredient"]').autocomplete({
+			source: ingredientsList,
+			minLength: 2,
+			    change: function(event, ui){
+			    	var id = (ui.item && ui.item.id) || '';
+			    	$(this).attr('data-id', id);
+			    }
+		});
+	}
+});
+
 
 $(document).ready(function() {
 	$('#createRecipeForm > #submitButton').click(createRecipe);
