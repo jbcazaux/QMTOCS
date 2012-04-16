@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collections;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -46,10 +47,6 @@ public class IngredientDAOImplTest {
 
     }
 
-    public void testGetentity() {
-
-    }
-
     @Test
     public void saveAndLoad() throws Exception {
         ingredientDAO.save(jambon);
@@ -61,6 +58,15 @@ public class IngredientDAOImplTest {
         assertNull("recipe must not be persisted", jambon.getRecipes().get(0)
                 .getId());
 
+    }
+
+    @Test
+    public void testFindAll() throws Exception {
+        ingredientDAO.save(jambon);
+        flushSession();
+
+        List<Ingredient> allIngredients = ingredientDAO.findAll();
+        assertFalse(CollectionUtils.isEmpty(allIngredients));
     }
 
     protected void flushSession() throws Exception {
