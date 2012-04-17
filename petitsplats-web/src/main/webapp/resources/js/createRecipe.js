@@ -2,7 +2,7 @@
 $(function() {
 
 	//liste des ingrédients pour l autocompletion
-	var ingredientsList;
+	var ingredientsList =[];
 
 	//fetch la liste
 	$.ajax({
@@ -84,9 +84,21 @@ $(function() {
 		}
 
 		ingredients.each(function(index) {
-			$(this).find('input').attr('name', 'ingredient' + (index + 1));
+			var input = $(this).find('input');
+			input.attr('name', 'ingredient' + (index + 1));
 			$(this).find('span[name="ingredientId"]').html(index + 1);
 			$(this).find('button[name="minus"]').css('visibility', 'visible');
+			
+			if (!input.hasClass('ui-autocomplete-input')){
+				input.autocomplete({
+					source : ingredientsList,
+					minLength : 2,
+					change : function(event, ui) {
+						var id = (ui.item && ui.item.id) || '';
+						$(this).attr('data-id', id);
+					}
+				});
+			}
 		});
 
 		return false;
