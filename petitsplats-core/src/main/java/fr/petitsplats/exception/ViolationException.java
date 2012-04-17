@@ -1,6 +1,5 @@
 package fr.petitsplats.exception;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,10 +24,5 @@ public class ViolationException extends FunctionnalException {
                 this.violations.add(violation);
             }
         }
-    }
-
-    public ViolationException(String field, String message) {
-        String[] violation = { field, message };
-        violations = Collections.singleton(violation);
     }
 }

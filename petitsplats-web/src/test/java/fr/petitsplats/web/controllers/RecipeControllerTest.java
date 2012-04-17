@@ -41,6 +41,7 @@ public class RecipeControllerTest {
         r.setId(12);
         try {
             recipeController.createRecipe(r, response);
+            fail("exception expected");
         } catch (MethodNotAllowedException e) {
             // ok
         } catch (Exception e) {
