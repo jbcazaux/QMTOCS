@@ -22,7 +22,7 @@ import fr.petitsplats.domain.RecipeStep;
 @ContextConfiguration(locations = { "classpath:/petitsplats-core.xml",
         "classpath:/datasource-test.xml" })
 @Transactional
-public class RecipeDAOTest {
+public class RecipeDAOImplTest {
 
     @Autowired
     private RecipeDAO recipeDAO;
@@ -34,6 +34,7 @@ public class RecipeDAOTest {
     private Ingredient jambon;
     private RecipeStep cuisson;
     private RecipeStep pret;
+    private RecipeStep couper;
 
     protected void flushSession() throws Exception {
         try {
@@ -51,6 +52,7 @@ public class RecipeDAOTest {
 
         cuisson = new RecipeStep("faire cuire les pates");
         pret = new RecipeStep("c'est pret");
+        couper = new RecipeStep("couper le pain");
 
         recipe = new Recipe();
         recipe.setTitle("title");
@@ -62,6 +64,9 @@ public class RecipeDAOTest {
 
     @Test
     public void testSaveAndLoad() throws Exception {
+
+        jambon.setLabel("jambon");
+        recipe.addIngredient(jambon);
         Assert.assertNull(recipe.getId());
         recipeDAO.save(recipe);
         Assert.assertEquals(Integer.valueOf(1), recipe.getId());
@@ -75,6 +80,37 @@ public class RecipeDAOTest {
                 .first().getLabel());
         Assert.assertEquals(pret.getLabel(), searchedRecipe.getRecipeSteps()
                 .last().getLabel());
+
+    }
+
+    @Test
+    public void testSave2recipesWithSameIngredients() throws Exception {
+
+        // recette1
+        Ingredient pain = new Ingredient();
+        pain.setLabel("pain");
+        recipe.addIngredient(pain);
+        Assert.assertNull(recipe.getId());
+        recipeDAO.save(recipe);
+        flushSession();
+
+        // recette2
+        Recipe recipe2 = new Recipe();
+        recipe2.setTitle("title2");
+        recipe2.setImageId(13);
+        recipe2.addIngredient(recipe.getIngredients().get(0));
+        recipe2.addIngredient(recipe.getIngredients().get(1));
+        recipe2.addRecipeStep(couper);
+        recipeDAO.save(recipe2);
+        flushSession();
+
+        Recipe searchedRecipe2 = recipeDAO.getEntity(Recipe.class,
+                recipe2.getId());
+        Assert.assertEquals(recipe.getIngredients().get(0).getId(),
+                searchedRecipe2.getIngredients().get(0).getId());
+
+        Assert.assertEquals(recipe.getIngredients().get(1).getId(),
+                searchedRecipe2.getIngredients().get(1).getId());
 
     }
 
