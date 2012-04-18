@@ -1,10 +1,9 @@
-
 $(function() {
 
-	//liste des ingrédients pour l autocompletion
-	var ingredientsList =[];
+	// liste des ingrédients pour l autocompletion
+	var ingredientsList = [];
 
-	//fetch la liste
+	// fetch la liste
 	$.ajax({
 		url : "ingredients",
 		type : "GET",
@@ -12,7 +11,7 @@ $(function() {
 		contentType : "application/json"
 	});
 
-	//callback lors du fetch de la liste
+	// callback lors du fetch de la liste
 	function initAutocomplete(data) {
 		ingredientsList = data;
 		$('input[name^="ingredient"]').autocomplete({
@@ -23,18 +22,19 @@ $(function() {
 				$(this).attr('data-id', id);
 			}
 		});
-	};
+	}
+	;
 
-	//call back lors de la création de la recette en base
+	// call back lors de la création de la recette en base
 	function onCreateSuccess(data) {
 		$('#infos').html('la sauvegarde est ok pour la recette ' + data);
 	}
 
-	//les templates des li qui sont ajoutées
+	// les templates des li qui sont ajoutées
 	var stepLi = "<li>etape <span name='stepId'></span><button name='minus'>-</button><input type='text' name='step' /><button name='add'>+</button></li>";
 	var ingredientLi = "<li>ingrédient <span name='ingredientId'></span><button name='minus'>-</button><input type='text' name='ingredient' /><button name='add'>+</button></li>";
 
-	//ajout ou suppression d une etape
+	// ajout ou suppression d une etape
 	function onStepAddOrDel() {
 		var button = $(this);
 		var steps = $('#createRecipeForm #steps li');
@@ -63,7 +63,7 @@ $(function() {
 		return false;
 	}
 
-	//ajout ou suppression d un agrement
+	// ajout ou suppression d un agrement
 	function onIngredientAddOrDel() {
 		var button = $(this);
 		var ingredients = $('#createRecipeForm #ingredients li');
@@ -88,8 +88,8 @@ $(function() {
 			input.attr('name', 'ingredient' + (index + 1));
 			$(this).find('span[name="ingredientId"]').html(index + 1);
 			$(this).find('button[name="minus"]').css('visibility', 'visible');
-			
-			if (!input.hasClass('ui-autocomplete-input')){
+
+			if (!input.hasClass('ui-autocomplete-input')) {
 				input.autocomplete({
 					source : ingredientsList,
 					minLength : 2,
@@ -105,7 +105,7 @@ $(function() {
 	}
 	;
 
-	//envoie de la requete pour la creation de la recette
+	// envoie de la requete pour la creation de la recette
 	function createRecipe() {
 
 		var steps = new Array();
@@ -122,7 +122,8 @@ $(function() {
 		var ingredients = new Array();
 		$('input[name^="ingredient"]').each(function(index) {
 			var ingredient = {
-				label : $(this).val()
+				label : $(this).val(),
+				id : ($(this).attr('data-id') ? $(this).attr('data-id') : 0)
 			};
 			if (ingredient.label) {
 				ingredients.push(ingredient);
