@@ -18,6 +18,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,6 +28,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "recipe")
+@EqualsAndHashCode(of = { "id", "title" }, callSuper = false)
 public class Recipe extends AbstractEntity {
 
     @Id
@@ -67,34 +69,6 @@ public class Recipe extends AbstractEntity {
 
     public void addRecipeStep(RecipeStep rs) {
         recipeSteps.add(rs);
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + (id == null ? 0 : id);
-        result = prime * result + ((title == null) ? 0 : title.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Recipe other = (Recipe) obj;
-        if (id != other.id)
-            return false;
-        if (title == null) {
-            if (other.title != null)
-                return false;
-        } else if (!title.equals(other.title))
-            return false;
-        return true;
     }
 
 }

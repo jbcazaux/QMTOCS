@@ -1,5 +1,7 @@
 package fr.petitsplats.dao;
 
+import static org.junit.Assert.assertNull;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.ConstraintViolationException;
@@ -111,6 +113,14 @@ public class RecipeDAOImplTest {
 
         Assert.assertEquals(recipe.getIngredients().get(1).getId(),
                 searchedRecipe2.getIngredients().get(1).getId());
+
+    }
+
+    @Test
+    public void testLoadNonExistingRecipe() throws Exception {
+
+        Recipe searchedRecipe = recipeDAO.getEntity(Recipe.class, -1);
+        assertNull(searchedRecipe);
 
     }
 

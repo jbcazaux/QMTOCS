@@ -1,6 +1,9 @@
 package fr.petitsplats.dao;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -61,6 +64,24 @@ public class IngredientDAOImplTest {
         assertFalse(CollectionUtils.isEmpty(allIngredients));
     }
 
+    @Test
+    public void testFindByLabel() throws Exception {
+        ingredientDAO.save(jambon);
+        flushSession();
+
+        Ingredient i = ingredientDAO.findByLabel(jambon.getLabel());
+        assertNotNull(i);
+        assertEquals(jambon.getId(), i.getId());
+        assertEquals(jambon.getLabel(), i.getLabel());
+
+    }
+
+    @Test
+    public void testFindByLabelWithNoResult() throws Exception {
+        Ingredient i = ingredientDAO.findByLabel("nonExistingLabel");
+        assertNull(i);
+    }
+
     protected void flushSession() throws Exception {
         try {
             entityManager.flush();
@@ -68,4 +89,5 @@ public class IngredientDAOImplTest {
             throw new Exception(e.getConstraintViolations().toString(), e);
         }
     }
+
 }

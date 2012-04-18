@@ -23,4 +23,8 @@ public class IngredientService {
     public List<Ingredient> findAll() {
         return ingredientDAO.findAll();
     }
+
+    public Ingredient findByLabel(String label) {
+        return ingredientDAO.findByLabel(label);
+    }
 }

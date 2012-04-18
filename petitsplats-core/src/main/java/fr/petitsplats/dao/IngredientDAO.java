@@ -8,4 +8,6 @@ public interface IngredientDAO extends DataAccessObject {
 
     public List<Ingredient> findAll();
 
+    public Ingredient findByLabel(String label);
+
 }

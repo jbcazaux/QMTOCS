@@ -1,5 +1,6 @@
 package fr.petitsplats.service;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -16,9 +17,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import fr.petitsplats.dao.RecipeDAO;
+import fr.petitsplats.domain.Ingredient;
 import fr.petitsplats.domain.Recipe;
 import fr.petitsplats.exception.ViolationException;
 
@@ -27,6 +30,9 @@ public class RecipeServiceTest {
 
     @Mock
     private RecipeDAO recipeDAO;
+
+    @Mock
+    private IngredientService ingredientService;
 
     @Mock
     Validator validator;
@@ -38,12 +44,13 @@ public class RecipeServiceTest {
 
         recipeService = new RecipeService();
         recipeService.setRecipeDAO(recipeDAO);
+        recipeService.setIngredientService(ingredientService);
         recipeService.setValidator(validator);
 
     }
 
     @Test
-    public void testCreateRecipe() throws ViolationException {
+    public void testCreateRecipeCallsDAO() throws ViolationException {
 
         Recipe r = new Recipe();
         recipeService.createRecipe(r);
@@ -70,5 +77,46 @@ public class RecipeServiceTest {
         }
 
         verify(recipeDAO, times(0)).save(r);
+    }
+
+    @Test
+    public void testCreateRecipeWithExistingIngredientIdLess()
+            throws ViolationException {
+
+        Ingredient i = new Ingredient();
+        i.setId(null);
+        i.setLabel("ingredient1");
+        Ingredient ii = new Ingredient();
+        ii.setId(12);
+        ii.setLabel("ingredient1");
+
+        Recipe r = new Recipe();
+        r.addIngredient(i);
+
+        when(ingredientService.findByLabel(i.getLabel())).thenReturn(ii);
+
+        recipeService.createRecipe(r);
+
+        assertEquals(ii.getId(), r.getIngredients().get(0).getId());
+        verify(recipeDAO, times(1)).save(r);
+        verify(ingredientService, times(1)).findByLabel(i.getLabel());
+    }
+
+    @Test
+    public void testCreateRecipeWithExistingIngredient()
+            throws ViolationException {
+
+        Ingredient i = new Ingredient();
+        i.setId(12);
+        i.setLabel("ingredient1");
+
+        Recipe r = new Recipe();
+        r.addIngredient(i);
+
+        recipeService.createRecipe(r);
+
+        assertEquals(i.getId(), r.getIngredients().get(0).getId());
+        verify(recipeDAO, times(1)).save(r);
+        verify(ingredientService, times(0)).findByLabel(Mockito.anyString());
     }
 }

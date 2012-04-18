@@ -31,4 +31,10 @@ public class IngredientServiceTest {
 
         verify(ingredientDAO, times(1)).findAll();
     }
+
+    @Test
+    public void testFindByLabel() throws Exception {
+        ingredientService.findByLabel("label");
+        verify(ingredientDAO, times(1)).findByLabel("label");
+    }
 }

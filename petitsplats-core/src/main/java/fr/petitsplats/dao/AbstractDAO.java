@@ -3,12 +3,9 @@ package fr.petitsplats.dao;
 import java.io.Serializable;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 
-import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,19 +44,13 @@ public class AbstractDAO implements DataAccessObject {
     public <T> T getEntity(Class<T> entityClass, Serializable id) {
         T entity = getEntityManager().find(entityClass, id);
         if (entity == null) {
-            throw new EntityNotFoundException();
+            StringBuilder sb = new StringBuilder("entity not found (class=");
+            sb.append(entityClass);
+            sb.append(", id=");
+            sb.append(id);
+            sb.append(')');
+            getLogger().info(sb.toString());
         }
         return entity;
     }
-
-    @SuppressWarnings("unchecked")
-    protected <T> T getEntityByNaturalId(Class<T> entityClass,
-            String naturalIdName, Object naturalIdValue) {
-        Criteria criteria = ((Session) entityManager.getDelegate())
-                .createCriteria(entityClass);
-        criteria.add(Restrictions.naturalId()
-                .set(naturalIdName, naturalIdValue));
-        return (T) criteria.uniqueResult();
-    }
-
 }

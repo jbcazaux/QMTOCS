@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import fr.petitsplats.dao.RecipeDAO;
+import fr.petitsplats.domain.Ingredient;
 import fr.petitsplats.domain.Recipe;
 import fr.petitsplats.exception.FunctionnalException;
 import fr.petitsplats.exception.ViolationException;
@@ -29,9 +30,23 @@ public class RecipeService {
     @Autowired
     private RecipeDAO recipeDAO;
 
+    @Setter
+    @Autowired
+    private IngredientService ingredientService;
+
     public Integer createRecipe(Recipe recipe) throws ViolationException {
 
         validateRecipe(recipe);
+
+        for (Ingredient ingredient : recipe.getIngredients()) {
+            if (ingredient.getId() == null || ingredient.getId() == 0) {
+                Ingredient i = ingredientService.findByLabel(ingredient
+                        .getLabel());
+                if (i != null) {
+                    ingredient.setId(i.getId());
+                }
+            }
+        }
         recipeDAO.save(recipe);
         return recipe.getId();
     }
