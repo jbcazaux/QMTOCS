@@ -3,6 +3,7 @@ package fr.petitsplats.web.controllers;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -65,5 +66,14 @@ public class RecipeControllerTest {
         r.setId(null);
         recipeController.createRecipe(r, response);
         verify(recipeService, times(1)).createRecipe(r);
+    }
+
+    @Test
+    public void testGetRecipe() throws Exception {
+        Recipe r = new Recipe();
+        r.setId(12);
+        when(recipeService.findById(r.getId())).thenReturn(r);
+        recipeController.getRecipe(r.getId());
+        verify(recipeService, times(1)).findById(r.getId());
     }
 }

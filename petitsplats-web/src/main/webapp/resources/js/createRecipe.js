@@ -22,8 +22,7 @@ $(function() {
 				$(this).attr('data-id', id);
 			}
 		});
-	}
-	;
+	};
 
 	// call back lors de la création de la recette en base
 	function onCreateSuccess(data) {
@@ -123,7 +122,7 @@ $(function() {
 		$('input[name^="ingredient"]').each(function(index) {
 			var ingredient = {
 				label : $(this).val(),
-				id : ($(this).attr('data-id') ? $(this).attr('data-id') : 0)
+				id : ($(this).attr('data-id') ? $(this).attr('data-id') : '')
 			};
 			if (ingredient.label) {
 				ingredients.push(ingredient);
@@ -133,7 +132,6 @@ $(function() {
 
 		var recipe = {
 			'title' : $('#createRecipeForm > input[name="title"]').val(),
-			'imageId' : $('#createRecipeForm > input[name="imgId"]').val(),
 			'recipeSteps' : steps,
 			'ingredients' : ingredients
 		};
@@ -152,14 +150,23 @@ $(function() {
 		});
 
 		return false;
-	}
-	;
+	};
 
+	function onLoadRecipe(data){
+		
+		
+	};
+	
 	// a l init de la page
 	$(document).ready(function() {
 		$('#createRecipeForm > #submitButton').click(createRecipe);
 		$("#steps").on("click", "button", onStepAddOrDel);
 		$("#ingredients").on("click", "button", onIngredientAddOrDel);
+		
+		$("#loadButton").on("click", function(){
+			var id = $("#imgid").val();
+			$('#recipeImg').attr('src', 'recipe/img/' +id+'.png');
+		});
 
 	});
 });

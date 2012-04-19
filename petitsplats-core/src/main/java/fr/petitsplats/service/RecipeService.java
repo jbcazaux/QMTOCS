@@ -15,6 +15,7 @@ import org.springframework.util.CollectionUtils;
 import fr.petitsplats.dao.RecipeDAO;
 import fr.petitsplats.domain.Ingredient;
 import fr.petitsplats.domain.Recipe;
+import fr.petitsplats.domain.RecipePicture;
 import fr.petitsplats.exception.FunctionnalException;
 import fr.petitsplats.exception.ViolationException;
 
@@ -36,7 +37,7 @@ public class RecipeService {
 
     public Integer createRecipe(Recipe recipe) throws ViolationException {
 
-        validateRecipe(recipe);
+        validate(recipe);
 
         for (Ingredient ingredient : recipe.getIngredients()) {
             if (ingredient.getId() == null || ingredient.getId() == 0) {
@@ -51,12 +52,32 @@ public class RecipeService {
         return recipe.getId();
     }
 
-    private void validateRecipe(Recipe recipe) throws ViolationException {
-        Set<ConstraintViolation<Recipe>> violations = validator
-                .validate(recipe);
+    public Recipe findById(Integer id) {
+        return recipeDAO.getEntity(Recipe.class, id);
+    }
+
+    public Integer createRecipePicture(RecipePicture recipePicture)
+            throws ViolationException {
+
+        validate(recipePicture);
+
+        if (recipeDAO.getEntity(Recipe.class, recipePicture.getId()) == null) {
+            throw new IllegalArgumentException("Cannot find recipe with id "
+                    + recipePicture.getId());
+        }
+
+        recipeDAO.save(recipePicture);
+        return recipePicture.getId();
+    }
+
+    public RecipePicture findPictureById(Integer id) {
+        return recipeDAO.getEntity(RecipePicture.class, id);
+    }
+
+    private <T> void validate(T recipe) throws ViolationException {
+        Set<ConstraintViolation<T>> violations = validator.validate(recipe);
         if (!CollectionUtils.isEmpty(violations)) {
             throw new ViolationException(violations);
         }
-
     }
 }

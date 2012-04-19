@@ -1,6 +1,9 @@
 package fr.petitsplats.dao;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+
+import java.io.InputStream;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -8,6 +11,7 @@ import javax.validation.ConstraintViolationException;
 
 import junit.framework.Assert;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fr.petitsplats.domain.Ingredient;
 import fr.petitsplats.domain.Recipe;
+import fr.petitsplats.domain.RecipePicture;
 import fr.petitsplats.domain.RecipeStep;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -37,6 +42,7 @@ public class RecipeDAOImplTest {
     private RecipeStep cuisson;
     private RecipeStep pret;
     private RecipeStep couper;
+    private byte[] image;
 
     protected void flushSession() throws Exception {
         try {
@@ -58,10 +64,13 @@ public class RecipeDAOImplTest {
 
         recipe = new Recipe();
         recipe.setTitle("title");
-        recipe.setImageId(12);
         recipe.addIngredient(jambon);
         recipe.addRecipeStep(cuisson);
         recipe.addRecipeStep(pret);
+
+        InputStream in = getClass().getResourceAsStream("/google.png");
+        image = IOUtils.toByteArray(in);
+
     }
 
     @Test
@@ -75,14 +84,13 @@ public class RecipeDAOImplTest {
         flushSession();
 
         Recipe searchedRecipe = recipeDAO.getEntity(Recipe.class, 1);
-        Assert.assertEquals(Integer.valueOf(1), searchedRecipe.getId());
-        Assert.assertEquals(jambon.getLabel(), searchedRecipe.getIngredients()
-                .get(0).getLabel());
-        Assert.assertEquals(cuisson.getLabel(), searchedRecipe.getRecipeSteps()
+        assertEquals(Integer.valueOf(1), searchedRecipe.getId());
+        assertEquals(jambon.getLabel(), searchedRecipe.getIngredients().get(0)
+                .getLabel());
+        assertEquals(cuisson.getLabel(), searchedRecipe.getRecipeSteps()
                 .first().getLabel());
-        Assert.assertEquals(pret.getLabel(), searchedRecipe.getRecipeSteps()
-                .last().getLabel());
-
+        assertEquals(pret.getLabel(), searchedRecipe.getRecipeSteps().last()
+                .getLabel());
     }
 
     @Test
@@ -99,7 +107,6 @@ public class RecipeDAOImplTest {
         // recette2
         Recipe recipe2 = new Recipe();
         recipe2.setTitle("title2");
-        recipe2.setImageId(13);
         recipe2.addIngredient(recipe.getIngredients().get(0));
         recipe2.addIngredient(recipe.getIngredients().get(1));
         recipe2.addRecipeStep(couper);
@@ -121,7 +128,20 @@ public class RecipeDAOImplTest {
 
         Recipe searchedRecipe = recipeDAO.getEntity(Recipe.class, -1);
         assertNull(searchedRecipe);
-
     }
 
+    @Test
+    public void testSaveAndLoadImage() throws Exception {
+        RecipePicture rp = new RecipePicture();
+        rp.setImage(image);
+        rp.setId(1);
+        recipeDAO.save(rp);
+        flushSession();
+
+        RecipePicture searchedRecipePicture = recipeDAO.getEntity(
+                RecipePicture.class, 1);
+        assertEquals(Integer.valueOf(1), searchedRecipePicture.getId());
+        assertEquals(image.length, searchedRecipePicture.getImage().length);
+
+    }
 }

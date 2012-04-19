@@ -11,9 +11,15 @@
 
 	<mvc:annotation-driven />
 
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+
+		<property name="maxUploadSize" value="2000000" />
+	</bean>
+
 	<mvc:resources mapping="/css/**" location="/resources/css/" />
 	<mvc:resources mapping="/img/**" location="/resources/img/" />
 	<mvc:resources mapping="/js/**" location="/resources/js/" />
 	<mvc:resources mapping="/*.html" location="/" />
-	
+
 </beans>

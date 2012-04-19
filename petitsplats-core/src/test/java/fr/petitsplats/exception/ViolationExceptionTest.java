@@ -1,6 +1,7 @@
 package fr.petitsplats.exception;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 
 import java.util.Collections;
@@ -41,7 +42,12 @@ public class ViolationExceptionTest {
         assertEquals(path.toString(), violations.iterator().next()[0]);
         assertEquals(cs.getMessage(), violations.iterator().next()[1]);
         assertEquals(1, violations.size());
+    }
 
+    @Test
+    public void testViolationExceptionWithNullParam() throws Exception {
+        ViolationException ex = new ViolationException(null);
+        assertNull(ex.getViolations());
     }
 
 }
