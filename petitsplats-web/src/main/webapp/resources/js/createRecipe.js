@@ -165,7 +165,7 @@ $(function() {
 		
 		$("#loadButton").on("click", function(){
 			var id = $("#imgid").val();
-			$('#recipeImg').attr('src', 'recipe/img/' +id+'.png');
+			$('#recipeImg').attr('src', 'recipe/' +id+'.jpg');
 		});
 
 	});

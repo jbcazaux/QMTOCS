@@ -54,23 +54,24 @@ public class RecipeController extends AbstractController {
         return id;
     }
 
-    @RequestMapping(value = "/img", method = RequestMethod.POST)
-    public void attachPicture(@RequestParam("file") MultipartFile file)
-            throws IOException, ViolationException {
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    public String attachPicture(@RequestParam("file") MultipartFile file,
+            @PathVariable Integer id) throws IOException, ViolationException {
         if (!file.isEmpty()) {
             RecipePicture rp = new RecipePicture();
-            rp.setId(4);
+            rp.setId(id);
             rp.setImage(file.getBytes());
             recipeService.createRecipePicture(rp);
+            return "redirect:/createRecipe.html";
         } else {
             throw new ViolationException(null);
         }
     }
 
-    @RequestMapping(value = "/img/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}.jpg", method = RequestMethod.GET)
     @ResponseBody
     public byte[] getPicture(@PathVariable int id, HttpServletResponse response) {
-        response.setContentType(MediaType.IMAGE_PNG_VALUE);
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
         response.setHeader("Content-Disposition", "attachment");
         return recipeService.findPictureById(id).getImage();
     }
