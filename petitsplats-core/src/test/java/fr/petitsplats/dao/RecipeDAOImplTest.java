@@ -76,15 +76,14 @@ public class RecipeDAOImplTest {
     @Test
     public void testSaveAndLoad() throws Exception {
 
-        jambon.setLabel("jambon");
-        recipe.addIngredient(jambon);
         Assert.assertNull(recipe.getId());
         recipeDAO.save(recipe);
-        Assert.assertEquals(Integer.valueOf(1), recipe.getId());
+        Assert.assertTrue(recipe.getId() > 0);
         flushSession();
 
-        Recipe searchedRecipe = recipeDAO.getEntity(Recipe.class, 1);
-        assertEquals(Integer.valueOf(1), searchedRecipe.getId());
+        Recipe searchedRecipe = recipeDAO.getEntity(Recipe.class,
+                recipe.getId());
+        assertEquals(recipe.getId(), searchedRecipe.getId());
         assertEquals(jambon.getLabel(), searchedRecipe.getIngredients().get(0)
                 .getLabel());
         assertEquals(cuisson.getLabel(), searchedRecipe.getRecipeSteps()
@@ -143,5 +142,23 @@ public class RecipeDAOImplTest {
         assertEquals(Integer.valueOf(1), searchedRecipePicture.getId());
         assertEquals(image.length, searchedRecipePicture.getImage().length);
 
+    }
+
+    @Test
+    public void testUpdateRecipe() throws Exception {
+        Assert.assertNull(recipe.getId());
+        recipeDAO.save(recipe);
+        Assert.assertTrue(recipe.getId() > 0);
+        flushSession();
+
+        Recipe searchedRecipe = recipeDAO.getEntity(Recipe.class,
+                recipe.getId());
+        searchedRecipe.getIngredients().get(0).setLabel("jambon2");
+        recipeDAO.save(searchedRecipe);
+        flushSession();
+
+        recipe = recipeDAO.getEntity(Recipe.class, searchedRecipe.getId());
+        Assert.assertEquals("jambon2", recipe.getIngredients().get(0)
+                .getLabel());
     }
 }
