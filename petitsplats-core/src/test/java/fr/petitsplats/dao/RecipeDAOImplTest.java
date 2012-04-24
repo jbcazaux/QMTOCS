@@ -1,9 +1,12 @@
 package fr.petitsplats.dao;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.InputStream;
+import java.util.Iterator;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -13,6 +16,7 @@ import junit.framework.Assert;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,9 +62,12 @@ public class RecipeDAOImplTest {
         jambon = new Ingredient();
         jambon.setLabel("jambon");
 
-        cuisson = new RecipeStep("faire cuire les pates");
-        pret = new RecipeStep("c'est pret");
-        couper = new RecipeStep("couper le pain");
+        cuisson = RecipeStep.builder().withLabel("faire cuire les pates")
+                .withOrder(2).build();
+        pret = RecipeStep.builder().withLabel("c'est pret").withOrder(5)
+                .build();
+        couper = RecipeStep.builder().withLabel("couper le pain").withOrder(1)
+                .build();
 
         recipe = new Recipe();
         recipe.setTitle("title");
@@ -90,10 +97,19 @@ public class RecipeDAOImplTest {
                 .first().getLabel());
         assertEquals(pret.getLabel(), searchedRecipe.getRecipeSteps().last()
                 .getLabel());
+
+        Integer order = -1;
+        for (Iterator<RecipeStep> iterator = searchedRecipe.getRecipeSteps()
+                .iterator(); iterator.hasNext();) {
+            RecipeStep rs = iterator.next();
+            assertTrue(rs.getOrder() > order);
+            order = rs.getOrder();
+        }
+
     }
 
     @Test
-    public void testSave2recipesWithSameIngredients() throws Exception {
+    public void testCreate2recipesWithSameIngredients() throws Exception {
 
         // recette1
         Ingredient pain = new Ingredient();
@@ -106,19 +122,69 @@ public class RecipeDAOImplTest {
         // recette2
         Recipe recipe2 = new Recipe();
         recipe2.setTitle("title2");
-        recipe2.addIngredient(recipe.getIngredients().iterator().next());
-        recipe2.addIngredient(recipe.getIngredients().iterator().next());
+        Iterator<Ingredient> it = recipe.getIngredients().iterator();
+        recipe2.addIngredient(it.next());
+        recipe2.addIngredient(it.next());
         recipe2.addRecipeStep(couper);
         recipeDAO.save(recipe2);
+        assertEquals(2, recipe2.getIngredients().size());
         flushSession();
 
+        // asserts
         Recipe searchedRecipe2 = recipeDAO.getEntity(Recipe.class,
                 recipe2.getId());
-        Assert.assertEquals(recipe.getIngredients().iterator().next().getId(),
-                searchedRecipe2.getIngredients().iterator().next().getId());
+        assertEquals(2, searchedRecipe2.getIngredients().size());
+        Iterator<Ingredient> itRecipe1 = recipe.getIngredients().iterator();
 
-        Assert.assertEquals(recipe.getIngredients().iterator().next().getId(),
-                searchedRecipe2.getIngredients().iterator().next().getId());
+        Ingredient i1 = itRecipe1.next();
+        Ingredient i2 = itRecipe1.next();
+
+        Assert.assertTrue(searchedRecipe2.getIngredients().contains(i1));
+        Assert.assertTrue(searchedRecipe2.getIngredients().contains(i2));
+
+    }
+
+    @Test
+    public void testCreate2recipesWithSameIngredientsButDetached()
+            throws Exception {
+
+        // recette1
+        Ingredient pain = new Ingredient();
+        pain.setLabel("pain");
+        recipe.addIngredient(pain);
+        Assert.assertNull(recipe.getId());
+        recipeDAO.save(recipe);
+        flushSession();
+
+        // recette2
+        Recipe recipe2 = new Recipe();
+        recipe2.setTitle("title2");
+        Iterator<Ingredient> it = recipe.getIngredients().iterator();
+
+        Ingredient i1 = new Ingredient();
+        i1.setId(it.next().getId());
+        recipe2.addIngredient(i1);
+
+        Ingredient i2 = new Ingredient();
+        i2.setId(it.next().getId());
+        recipe2.addIngredient(i2);
+
+        assertFalse(i1.getId().equals(i2.getId()));
+
+        recipe2.addRecipeStep(couper);
+        recipeDAO.save(recipe2);
+        assertEquals(2, recipe2.getIngredients().size());
+        flushSession();
+
+        // asserts
+        Recipe searchedRecipe2 = recipeDAO.getEntity(Recipe.class,
+                recipe2.getId());
+        Iterator<Ingredient> itRecipe1 = recipe.getIngredients().iterator();
+        i1 = itRecipe1.next();
+        i2 = itRecipe1.next();
+
+        Assert.assertTrue(searchedRecipe2.getIngredients().contains(i1));
+        Assert.assertTrue(searchedRecipe2.getIngredients().contains(i2));
 
     }
 
@@ -145,20 +211,45 @@ public class RecipeDAOImplTest {
     }
 
     @Test
-    public void testUpdateRecipe() throws Exception {
+    public void testSaveAndUpdateRecipeWithNewIngredient() throws Exception {
+        Assert.assertNull(recipe.getId());
+        recipeDAO.save(recipe);
+        Assert.assertTrue(recipe.getId() > 0);
+        Assert.assertEquals(1, recipe.getIngredients().size());
+        flushSession();
+
+        Ingredient pates = new Ingredient();
+        pates.setLabel("pates");
+
+        Recipe searchedRecipe = recipeDAO.getEntity(Recipe.class,
+                recipe.getId());
+        entityManager.clear();
+        searchedRecipe.getIngredients().add(pates);
+        recipeDAO.merge(searchedRecipe);
+        flushSession();
+
+        recipe = recipeDAO.getEntity(Recipe.class, searchedRecipe.getId());
+        Assert.assertEquals(2, recipe.getIngredients().size());
+    }
+
+    @Ignore
+    public void testUpdateRecipeWithDetachedIngredients() throws Exception {
         Assert.assertNull(recipe.getId());
         recipeDAO.save(recipe);
         Assert.assertTrue(recipe.getId() > 0);
         flushSession();
 
+        Ingredient pates = new Ingredient();
+        pates.setLabel("pates");
+
         Recipe searchedRecipe = recipeDAO.getEntity(Recipe.class,
                 recipe.getId());
-        searchedRecipe.getIngredients().iterator().next().setLabel("jambon2");
-        recipeDAO.save(searchedRecipe);
+        entityManager.clear();
+        searchedRecipe.getIngredients().add(pates);
+        recipeDAO.merge(searchedRecipe);
         flushSession();
 
         recipe = recipeDAO.getEntity(Recipe.class, searchedRecipe.getId());
-        Assert.assertEquals("jambon2", recipe.getIngredients().iterator()
-                .next().getLabel());
+        Assert.assertEquals(2, recipe.getIngredients().size());
     }
 }

@@ -211,4 +211,57 @@ public class RecipeServiceTest {
                 .thenReturn(null);
         recipeService.createRecipePicture(recipePicture);
     }
+
+    @Test
+    public void testUpdateRecipeCallsRecipeDao() throws ViolationException {
+        Recipe r = new Recipe();
+        recipeService.updateRecipe(r);
+        verify(recipeDAO).merge(r);
+    }
+
+    @Test
+    public void testUpdateRecipeWithValidationErrorThrowsException() {
+        ConstraintViolation<Recipe> cv = mock(ConstraintViolation.class);
+        Path p = mock(Path.class);
+        Recipe r = new Recipe();
+
+        when(validator.validate(r)).thenReturn(Collections.singleton(cv));
+        when(p.toString()).thenReturn("");
+        when(cv.getPropertyPath()).thenReturn(p);
+        when(cv.getMessage()).thenReturn("");
+
+        try {
+            recipeService.updateRecipe(r);
+            fail("exception expected");
+        } catch (ViolationException e) {
+            // ok
+        }
+
+        verify(recipeDAO, times(0)).merge(r);
+    }
+
+    @Test
+    public void testUpdateRecipeWithExistingIngredientIdLess()
+            throws ViolationException {
+
+        Ingredient i = new Ingredient();
+        i.setId(null);
+        i.setLabel("ingredient1");
+        Ingredient ii = new Ingredient();
+        ii.setId(12);
+        ii.setLabel("ingredient1");
+
+        Recipe r = new Recipe();
+        r.setId(1);
+        r.addIngredient(i);
+
+        when(ingredientService.findByLabel(i.getLabel())).thenReturn(ii);
+
+        recipeService.updateRecipe(r);
+
+        assertEquals(ii.getId(), r.getIngredients().iterator().next().getId());
+        verify(recipeDAO, times(1)).merge(r);
+        verify(ingredientService, times(1)).findByLabel(i.getLabel());
+    }
+
 }

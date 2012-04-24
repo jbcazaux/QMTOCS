@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -29,19 +31,49 @@ public class RecipeStep extends AbstractEntity implements
     @NotEmpty
     private String label;
 
-    public RecipeStep(String label) {
-        this.label = label;
-    }
-
-    public RecipeStep() {
-        // emtpy
-    }
+    @Getter
+    @Setter
+    @NotNull
+    @Min(value = 1)
+    @Column(name = "steporder")
+    private Integer order;
 
     @Override
     public int compareTo(RecipeStep o) {
-        if (id != null) {
-            return id.compareTo(o.getId());
+        if (order != null) {
+            return order.compareTo(o.getOrder());
         }
         return 1;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private RecipeStep recipeStep;
+
+        public Builder() {
+            recipeStep = new RecipeStep();
+        }
+
+        public Builder withId(Integer id) {
+            recipeStep.setId(id);
+            return this;
+        }
+
+        public Builder withLabel(String label) {
+            recipeStep.setLabel(label);
+            return this;
+        }
+
+        public Builder withOrder(Integer order) {
+            recipeStep.setOrder(order);
+            return this;
+        }
+
+        public RecipeStep build() {
+            return recipeStep;
+        }
     }
 }

@@ -38,18 +38,15 @@ public class RecipeService {
     public Integer createRecipe(Recipe recipe) throws ViolationException {
 
         validate(recipe);
-
-        for (Ingredient ingredient : recipe.getIngredients()) {
-            if (ingredient.getId() == null || ingredient.getId() == 0) {
-                Ingredient i = ingredientService.findByLabel(ingredient
-                        .getLabel());
-                if (i != null) {
-                    ingredient.setId(i.getId());
-                }
-            }
-        }
+        reattachIdLessIngredients(recipe);
         recipeDAO.save(recipe);
         return recipe.getId();
+    }
+
+    public void updateRecipe(Recipe recipe) throws ViolationException {
+        validate(recipe);
+        reattachIdLessIngredients(recipe);
+        recipeDAO.merge(recipe);
     }
 
     public Recipe findById(Integer id) {
@@ -78,6 +75,24 @@ public class RecipeService {
         Set<ConstraintViolation<T>> violations = validator.validate(recipe);
         if (!CollectionUtils.isEmpty(violations)) {
             throw new ViolationException(violations);
+        }
+    }
+
+    /**
+     * Scanne les ingrédients d'une recette pour voir si les ingrédients
+     * attachés qui n ont pas d'id n existent vraiment pas en base
+     * 
+     * @param recipe
+     */
+    private void reattachIdLessIngredients(Recipe recipe) {
+        for (Ingredient ingredient : recipe.getIngredients()) {
+            if (ingredient.getId() == null || ingredient.getId() == 0) {
+                Ingredient i = ingredientService.findByLabel(ingredient
+                        .getLabel());
+                if (i != null) {
+                    ingredient.setId(i.getId());
+                }
+            }
         }
     }
 }

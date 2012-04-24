@@ -75,4 +75,20 @@ public class RecipeController extends AbstractController {
         response.setHeader("Content-Disposition", "attachment");
         return recipeService.findPictureById(id).getImage();
     }
+
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    public void updateRecipe(@RequestBody Recipe recipe,
+            @PathVariable Integer id, HttpServletResponse response)
+            throws ViolationException, MethodNotAllowedException {
+
+        if (recipe.getId() != id || recipe.getId() == 0
+                || recipe.getId() == null) {
+            throw new MethodNotAllowedException();
+        }
+
+        recipeService.updateRecipe(recipe);
+
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+    }
+
 }

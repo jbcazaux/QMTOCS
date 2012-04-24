@@ -110,12 +110,12 @@ $(function() {
 		var steps = new Array();
 		$('input[name^="step"]').each(function(index) {
 			var step = {
-				label : $(this).val()
+				label : $(this).val(),
+				order : (index + 1)
 			};
 			if (step.label) {
 				steps.push(step);
-			}
-			;
+			};
 		});
 
 		var ingredients = new Array();
@@ -135,10 +135,6 @@ $(function() {
 			'recipeSteps' : steps,
 			'ingredients' : ingredients
 		};
-
-		var json = JSON.stringify(recipe);
-		// jQuery.post('recipe', JSON.stringify( recipe ), onCreateSuccess,
-		// "json");
 
 		$.ajax({
 			url : "recipe",

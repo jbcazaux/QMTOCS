@@ -76,4 +76,42 @@ public class RecipeControllerTest {
         recipeController.getRecipe(r.getId());
         verify(recipeService, times(1)).findById(r.getId());
     }
+
+    @Test
+    public void testUpdateInsteadOfCreate() {
+        Recipe r = new Recipe();
+        r.setId(0);
+        try {
+            recipeController.updateRecipe(r, 0, response);
+            fail("exception expected");
+        } catch (MethodNotAllowedException e) {
+            // ok
+        } catch (Exception e) {
+            fail("exception not expected");
+        }
+    }
+
+    @Test
+    public void testUpdateWithBadId() {
+        Recipe r = new Recipe();
+        r.setId(12);
+        try {
+            recipeController.updateRecipe(r, r.getId() + 1, response);
+            fail("exception expected");
+        } catch (MethodNotAllowedException e) {
+            // ok
+        } catch (Exception e) {
+            fail("exception not expected");
+        }
+    }
+
+    @Test
+    public void testUpdateRecipe() throws ViolationException,
+            MethodNotAllowedException {
+        Recipe r = new Recipe();
+        r.setId(12);
+        r.setTitle("title");
+        recipeController.updateRecipe(r, r.getId(), response);
+        verify(recipeService).updateRecipe(r);
+    }
 }

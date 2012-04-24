@@ -5,7 +5,6 @@ import java.io.Serializable;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,12 +31,8 @@ public class AbstractDAO implements DataAccessObject {
 
     @Override
     public <T> T merge(final T entity) {
-        return entityManager.merge(entity);
-    }
-
-    @Override
-    public void evict(Object entity) {
-        ((Session) entityManager.getDelegate()).evict(entity);
+        entityManager.merge(entity);
+        return entity;
     }
 
     @Override

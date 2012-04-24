@@ -46,7 +46,7 @@ public class Recipe extends AbstractEntity {
     @Getter
     @Setter
     @NotEmpty
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "recipe_ingredients", joinColumns = { @JoinColumn(name = "recipe_id", referencedColumnName = "recipe_id") }, inverseJoinColumns = { @JoinColumn(name = "ingredient_id", referencedColumnName = "ingredient_id") })
     private Set<Ingredient> ingredients = new HashSet<Ingredient>();
 
