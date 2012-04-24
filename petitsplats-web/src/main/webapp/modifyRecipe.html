@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Que Mange-t'on ce soir ?</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script src="js/libs/jquery-1.7.1.min.js"></script>
+<script src="js/modifyRecipe.js"></script>
+
+<link type="text/css"
+	href="css/ui-lightness/jquery-ui-1.8.18.custom.css" rel="Stylesheet" />
+<script type="text/javascript"
+	src="js/libs/jquery-ui-1.8.18.custom.min.js"></script>
+
+
+</head>
+<body>
+
+	<form action="#" id='modifyRecipeForm'>
+
+		Titre: <input type="text" id="title" /><br /> 
+		Id: <span id='id'></span><br />
+		Ingrédients:
+		<ul id='ingredients'>
+		</ul>
+
+		Etapes:
+		<ul id='steps'>
+		</ul>
+
+		<input type="submit" value="Submit" id='submitButton' />
+	</form>
+	<div id='infos'>Modifier la recette</div>
+	<hr/>
+		<div>Attacher une image</div>
+		<form method="post" action="recipe/4" enctype="multipart/form-data">
+			<input type="file" name="file" accept="image/jpeg"/> 
+			<input type="submit" />
+		</form>
+	<hr/>
+	<img src='' id='recipeImg'/>	
+</body>
+</html>
