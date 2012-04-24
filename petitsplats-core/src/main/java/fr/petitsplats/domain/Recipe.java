@@ -1,7 +1,7 @@
 package fr.petitsplats.domain;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -48,7 +48,7 @@ public class Recipe extends AbstractEntity {
     @NotEmpty
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinTable(name = "recipe_ingredients", joinColumns = { @JoinColumn(name = "recipe_id", referencedColumnName = "recipe_id") }, inverseJoinColumns = { @JoinColumn(name = "ingredient_id", referencedColumnName = "ingredient_id") })
-    private List<Ingredient> ingredients = new ArrayList<Ingredient>();
+    private Set<Ingredient> ingredients = new HashSet<Ingredient>();
 
     public void addIngredient(Ingredient i) {
         ingredients.add(i);

@@ -84,8 +84,8 @@ public class RecipeDAOImplTest {
         Recipe searchedRecipe = recipeDAO.getEntity(Recipe.class,
                 recipe.getId());
         assertEquals(recipe.getId(), searchedRecipe.getId());
-        assertEquals(jambon.getLabel(), searchedRecipe.getIngredients().get(0)
-                .getLabel());
+        assertEquals(jambon.getLabel(), searchedRecipe.getIngredients()
+                .iterator().next().getLabel());
         assertEquals(cuisson.getLabel(), searchedRecipe.getRecipeSteps()
                 .first().getLabel());
         assertEquals(pret.getLabel(), searchedRecipe.getRecipeSteps().last()
@@ -106,19 +106,19 @@ public class RecipeDAOImplTest {
         // recette2
         Recipe recipe2 = new Recipe();
         recipe2.setTitle("title2");
-        recipe2.addIngredient(recipe.getIngredients().get(0));
-        recipe2.addIngredient(recipe.getIngredients().get(1));
+        recipe2.addIngredient(recipe.getIngredients().iterator().next());
+        recipe2.addIngredient(recipe.getIngredients().iterator().next());
         recipe2.addRecipeStep(couper);
         recipeDAO.save(recipe2);
         flushSession();
 
         Recipe searchedRecipe2 = recipeDAO.getEntity(Recipe.class,
                 recipe2.getId());
-        Assert.assertEquals(recipe.getIngredients().get(0).getId(),
-                searchedRecipe2.getIngredients().get(0).getId());
+        Assert.assertEquals(recipe.getIngredients().iterator().next().getId(),
+                searchedRecipe2.getIngredients().iterator().next().getId());
 
-        Assert.assertEquals(recipe.getIngredients().get(1).getId(),
-                searchedRecipe2.getIngredients().get(1).getId());
+        Assert.assertEquals(recipe.getIngredients().iterator().next().getId(),
+                searchedRecipe2.getIngredients().iterator().next().getId());
 
     }
 
@@ -153,12 +153,12 @@ public class RecipeDAOImplTest {
 
         Recipe searchedRecipe = recipeDAO.getEntity(Recipe.class,
                 recipe.getId());
-        searchedRecipe.getIngredients().get(0).setLabel("jambon2");
+        searchedRecipe.getIngredients().iterator().next().setLabel("jambon2");
         recipeDAO.save(searchedRecipe);
         flushSession();
 
         recipe = recipeDAO.getEntity(Recipe.class, searchedRecipe.getId());
-        Assert.assertEquals("jambon2", recipe.getIngredients().get(0)
-                .getLabel());
+        Assert.assertEquals("jambon2", recipe.getIngredients().iterator()
+                .next().getLabel());
     }
 }

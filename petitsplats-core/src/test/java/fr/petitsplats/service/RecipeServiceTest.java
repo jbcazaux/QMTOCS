@@ -105,7 +105,7 @@ public class RecipeServiceTest {
 
         recipeService.createRecipe(r);
 
-        assertEquals(ii.getId(), r.getIngredients().get(0).getId());
+        assertEquals(ii.getId(), r.getIngredients().iterator().next().getId());
         verify(recipeDAO, times(1)).save(r);
         verify(ingredientService, times(1)).findByLabel(i.getLabel());
     }
@@ -123,7 +123,7 @@ public class RecipeServiceTest {
 
         recipeService.createRecipe(r);
 
-        assertEquals(i.getId(), r.getIngredients().get(0).getId());
+        assertEquals(i.getId(), r.getIngredients().iterator().next().getId());
         verify(recipeDAO, times(1)).save(r);
         verify(ingredientService, times(0)).findByLabel(Mockito.anyString());
     }
