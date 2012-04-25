@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import javax.persistence.EntityManager;
@@ -16,7 +17,6 @@ import junit.framework.Assert;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -161,6 +161,7 @@ public class RecipeDAOImplTest {
         recipe2.setTitle("title2");
         Iterator<Ingredient> it = recipe.getIngredients().iterator();
 
+        // les ingredients détachés
         Ingredient i1 = new Ingredient();
         i1.setId(it.next().getId());
         recipe2.addIngredient(i1);
@@ -170,6 +171,7 @@ public class RecipeDAOImplTest {
         recipe2.addIngredient(i2);
 
         assertFalse(i1.getId().equals(i2.getId()));
+        assertFalse(i1.equals(i2));
 
         recipe2.addRecipeStep(couper);
         recipeDAO.save(recipe2);
@@ -211,7 +213,9 @@ public class RecipeDAOImplTest {
     }
 
     @Test
-    public void testSaveAndUpdateRecipeWithNewIngredient() throws Exception {
+    public void testSaveAndUpdateDetachedRecipeWithNewIngredient()
+            throws Exception {
+        // sauve recette1
         Assert.assertNull(recipe.getId());
         recipeDAO.save(recipe);
         Assert.assertTrue(recipe.getId() > 0);
@@ -223,7 +227,10 @@ public class RecipeDAOImplTest {
 
         Recipe searchedRecipe = recipeDAO.getEntity(Recipe.class,
                 recipe.getId());
+        // clean la session pour detacher les objets
         entityManager.clear();
+        searchedRecipe.setIngredients(new HashSet<Ingredient>());
+        searchedRecipe.getIngredients().add(jambon);
         searchedRecipe.getIngredients().add(pates);
         recipeDAO.merge(searchedRecipe);
         flushSession();
@@ -232,24 +239,87 @@ public class RecipeDAOImplTest {
         Assert.assertEquals(2, recipe.getIngredients().size());
     }
 
-    @Ignore
-    public void testUpdateRecipeWithDetachedIngredients() throws Exception {
+    @Test
+    public void testUpdateDetachedRecipeWithNewDetachedIngredients()
+            throws Exception {
+        // enregistre la recette
         Assert.assertNull(recipe.getId());
         recipeDAO.save(recipe);
         Assert.assertTrue(recipe.getId() > 0);
         flushSession();
 
-        Ingredient pates = new Ingredient();
-        pates.setLabel("pates");
-
         Recipe searchedRecipe = recipeDAO.getEntity(Recipe.class,
                 recipe.getId());
+        // clean de la session pour detacher les objets
         entityManager.clear();
+        searchedRecipe.setIngredients(new HashSet<Ingredient>());
+        searchedRecipe.getIngredients().add(jambon);
+        // ajoute un nouvel ingredient (sans id)
+        Ingredient pates = new Ingredient();
+        pates.setLabel("pates");
         searchedRecipe.getIngredients().add(pates);
         recipeDAO.merge(searchedRecipe);
         flushSession();
 
         recipe = recipeDAO.getEntity(Recipe.class, searchedRecipe.getId());
         Assert.assertEquals(2, recipe.getIngredients().size());
+    }
+
+    @Test
+    public void testUpdateDetachedRecipeWithExistingDetachedIngredients()
+            throws Exception {
+        // enregistre la recette
+        Assert.assertNull(recipe.getId());
+        recipeDAO.save(recipe);
+        Assert.assertTrue(recipe.getId() > 0);
+        // cree un nouvel ingredient en base
+        Ingredient salade = new Ingredient();
+        salade.setLabel("salade");
+        entityManager.persist(salade);
+        flushSession();
+
+        // load la recette a modifier
+        Recipe searchedRecipe = recipeDAO.getEntity(Recipe.class,
+                recipe.getId());
+        // clean de la session et de la recette
+        entityManager.clear();
+        searchedRecipe.setIngredients(new HashSet<Ingredient>());
+        // ajoute un nouvel ingredient (avec id)
+        searchedRecipe.getIngredients().add(salade);
+        searchedRecipe.getIngredients().add(jambon);
+
+        recipeDAO.merge(searchedRecipe);
+        flushSession();
+
+        recipe = recipeDAO.getEntity(Recipe.class, searchedRecipe.getId());
+        Assert.assertEquals(2, recipe.getIngredients().size());
+    }
+
+    @Test
+    public void testUpdateRecipeWithDeletingDetachedIngredients()
+            throws Exception {
+        // enregistre la recette avec 2 ingredients (salade et jambon)
+        Assert.assertNull(recipe.getId());
+        Ingredient salade = new Ingredient();
+        salade.setLabel("salade");
+        recipe.addIngredient(salade);
+        recipeDAO.save(recipe);
+        Assert.assertTrue(recipe.getId() > 0);
+        // cree un nouvel ingredient en base
+        flushSession();
+
+        // load la recette a modifier
+        Recipe searchedRecipe = recipeDAO.getEntity(Recipe.class,
+                recipe.getId());
+        // clean de la session pour detacher la recette
+        entityManager.clear();
+        // remplace la set list
+        searchedRecipe.setIngredients(new HashSet<Ingredient>());
+        searchedRecipe.getIngredients().add(jambon);
+        recipeDAO.merge(searchedRecipe);
+        flushSession();
+
+        recipe = recipeDAO.getEntity(Recipe.class, searchedRecipe.getId());
+        Assert.assertEquals(1, recipe.getIngredients().size());
     }
 }

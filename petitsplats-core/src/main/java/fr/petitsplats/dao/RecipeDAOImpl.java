@@ -27,10 +27,17 @@ public class RecipeDAOImpl extends AbstractDAO implements RecipeDAO {
         return recipe;
     }
 
+    /**
+     * Cette méthode ne peut être appelée que sur une recette détachée de la
+     * session, sinon bug hibernate: impossible de supprimer l ingredient de la
+     * liste.
+     * 
+     * @param recipe
+     */
     private void reatachIngredients(Recipe recipe) {
         Set<Ingredient> proxyIngredients = new HashSet<Ingredient>();
 
-        boolean atLeastOneProxy = false;
+        int size = recipe.getIngredients().size();
         for (Iterator<Ingredient> it = recipe.getIngredients().iterator(); it
                 .hasNext();) {
             Ingredient ingredient = it.next();
@@ -38,15 +45,17 @@ public class RecipeDAOImpl extends AbstractDAO implements RecipeDAO {
                 Ingredient reference = getEntityManager().getReference(
                         Ingredient.class, ingredient.getId());
                 proxyIngredients.add(reference);
-                atLeastOneProxy = true;
-            } else {
-                proxyIngredients.add(ingredient);
+                it.remove();
             }
         }
 
-        if (!proxyIngredients.isEmpty() && atLeastOneProxy) {
-            recipe.getIngredients().clear();
+        if (!proxyIngredients.isEmpty()) {
             recipe.getIngredients().addAll(proxyIngredients);
         }
+
+        if (recipe.getIngredients().size() != size) {
+            throw new RuntimeException("C'est la merde");
+        }
     }
+
 }

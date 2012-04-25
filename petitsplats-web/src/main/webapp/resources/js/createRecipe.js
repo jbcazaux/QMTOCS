@@ -62,7 +62,7 @@ $(function() {
 		return false;
 	}
 
-	// ajout ou suppression d un agrement
+	// ajout ou suppression d un ingredient
 	function onIngredientAddOrDel() {
 		var button = $(this);
 		var ingredients = $('#createRecipeForm #ingredients li');
@@ -101,8 +101,7 @@ $(function() {
 		});
 
 		return false;
-	}
-	;
+	};
 
 	// envoie de la requete pour la creation de la recette
 	function createRecipe() {

@@ -6,8 +6,8 @@ $.urlParam = function(name){
 };
 
 $(function() {
-	var ingredientLi = "<li>ingrédient <span name='ingredientId'></span><button name='minus'>-</button><input type='text' name='ingredient' /><button name='add'>+</button></li>";
-	var stepLi = "<li>etape <span name='stepId'></span><button name='minus'>-</button><input type='text' name='step' /><button name='add'>+</button></li>";
+	var ingredientLi = "<li>ingrédient <span name='ingredientId'></span><button name='minus' style='visibility: hidden'>-</button><input type='text' name='ingredient' /><button name='add'>+</button></li>";
+	var stepLi = "<li>etape <span name='stepId'></span><button name='minus' style='visibility: hidden'>-</button><input type='text' name='step' /><button name='add'>+</button></li>";
 	
 	// liste des ingrédients pour l autocompletion
 	var ingredientsList = [];
@@ -46,6 +46,9 @@ $(function() {
 					$(this).attr('data-id', id);
 				}
 			});
+			if (r.ingredients.length > 1){
+				li.find('button[name="minus"]').css('visibility', 'visible');
+			}
 		});
 		//liste des etapes
 		$.each(r.recipeSteps, function(index, s){
@@ -54,6 +57,9 @@ $(function() {
 			li.find('span[name="stepId"]').html(s.order);
 			li.find('input[name="step"]').val(s.label);
 			li.find('input[name="step"]').attr('data-id', s.id);
+			if (r.recipeSteps.length > 1){
+				li.find('button[name="minus"]').css('visibility', 'visible');
+			}
 		});
 	});
 	
@@ -99,8 +105,49 @@ $(function() {
 			dataType : "json",
 			contentType : "application/json"
 		}).done(function(data){
-			$('#infos').html('la modification est OK - ' + data);
+			$('#infos').html('la modification est OK - ');
 			return false;
+		});
+
+		return false;
+	};
+	
+	// ajout ou suppression d un ingredient
+	function onIngredientAddOrDel() {
+		var button = $(this);
+		var ingredients = $('#modifyRecipeForm #ingredients li');
+
+		if (button.attr('name').indexOf('add') >= 0) {
+			$(ingredientLi).insertAfter(button.parent('li'));
+		} else {
+			button.parent('li').remove();
+		}
+
+		ingredients = $('#modifyRecipeForm #ingredients li');
+		if (ingredients.size() === 1) {
+			ingredients.first().find('button[name="minus"]').css('visibility',
+					'hidden');
+			ingredients.first().find('input').attr('name', 'ingredient1');
+			ingredients.first().find('span[name="ingredientId"]').html('1');
+			return false;
+		}
+
+		ingredients.each(function(index) {
+			var input = $(this).find('input');
+			input.attr('name', 'ingredient' + (index + 1));
+			$(this).find('span[name="ingredientId"]').html(index + 1);
+			$(this).find('button[name="minus"]').css('visibility', 'visible');
+
+			if (!input.hasClass('ui-autocomplete-input')) {
+				input.autocomplete({
+					source : ingredientsList,
+					minLength : 2,
+					change : function(event, ui) {
+						var id = (ui.item && ui.item.id) || '';
+						$(this).attr('data-id', id);
+					}
+				});
+			}
 		});
 
 		return false;
@@ -110,8 +157,8 @@ $(function() {
 	$(document).ready(function() {
 		
 		$('#modifyRecipeForm > #submitButton').click(modifyRecipe);
-		/*$("#steps").on("click", "button", onStepAddOrDel);
 		$("#ingredients").on("click", "button", onIngredientAddOrDel);
+		/*$("#steps").on("click", "button", onStepAddOrDel);
 		*/
 	});
 });
