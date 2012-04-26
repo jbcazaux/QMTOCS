@@ -6,8 +6,8 @@ $.urlParam = function(name){
 };
 
 $(function() {
-	var ingredientLi = "<li>ingrédient <span name='ingredientId'></span><button name='minus' style='visibility: hidden'>-</button><input type='text' name='ingredient' /><button name='add'>+</button></li>";
-	var stepLi = "<li>etape <span name='stepId'></span><button name='minus' style='visibility: hidden'>-</button><input type='text' name='step' /><button name='add'>+</button></li>";
+	var ingredientLi = "<li>ingrédient <span name='number'></span><button name='minus' style='visibility: hidden'>-</button><input type='text' /><button name='add'>+</button></li>";
+	var stepLi = "<li>etape <span name='number'></span><button name='minus' style='visibility: hidden'>-</button><input type='text' /><button name='add'>+</button></li>";
 	
 	// liste des ingrédients pour l autocompletion
 	var ingredientsList = [];
@@ -34,8 +34,8 @@ $(function() {
 		$.each(r.ingredients, function(index, i){
 			$('#ingredients').append($(ingredientLi));
 			var li = $('#ingredients li').last();
-			li.find('span[name="ingredientId"]').html(index + 1);
-			var input = li.find('input[name="ingredient"]');
+			li.find('span[name="number').html(index + 1);
+			var input = li.find('input');
 			input.val(i.label);
 			input.attr('data-id', i.id);
 			input.autocomplete({
@@ -54,9 +54,9 @@ $(function() {
 		$.each(r.recipeSteps, function(index, s){
 			$('#steps').append($(stepLi));
 			var li = $('#steps li').last();
-			li.find('span[name="stepId"]').html(s.order);
-			li.find('input[name="step"]').val(s.label);
-			li.find('input[name="step"]').attr('data-id', s.id);
+			li.find('span[name="number"]').html(s.order);
+			li.find('input').val(s.label);
+			li.find('input').attr('data-id', s.id);
 			if (r.recipeSteps.length > 1){
 				li.find('button[name="minus"]').css('visibility', 'visible');
 			}
@@ -67,7 +67,7 @@ $(function() {
 	function modifyRecipe() {
 
 		var steps = new Array();
-		$('input[name^="step"]').each(function(index) {
+		$('#steps input').each(function(index) {
 			var step = {
 				label : $(this).val(),
 				order : (index + 1),
@@ -79,15 +79,14 @@ $(function() {
 		});
 
 		var ingredients = new Array();
-		$('input[name^="ingredient"]').each(function(index) {
+		$('#ingredients input').each(function(index) {
 			var ingredient = {
 				label : $(this).val(),
 				id : ($(this).attr('data-id') ? $(this).attr('data-id') : '')
 			};
 			if (ingredient.label) {
 				ingredients.push(ingredient);
-			}
-			;
+			};
 		});
 
 		var recipe = {
@@ -101,7 +100,6 @@ $(function() {
 			url : "recipe/" + recipe.id,
 			type : "PUT",
 			data : JSON.stringify(recipe),
-			//success : onCreateSuccess,
 			dataType : "json",
 			contentType : "application/json"
 		}).done(function(data){
@@ -112,29 +110,25 @@ $(function() {
 		return false;
 	};
 	
-	// ajout ou suppression d une etape
-	function onStepAddOrDel() {
-		var button = $(this);
-		var steps = $('#modifyRecipeForm #steps li');
+	// ajout ou suppression d un li (pour step ou ingredient)
+	function addOrDelLi(type, button, li) {
 
 		if (button.attr('name').indexOf('add') >= 0) {
-			$(stepLi).insertAfter(button.parent('li'));
+			li.insertAfter(button.parent('li'));
 		} else {
 			button.parent('li').remove();
 		}
 
-		steps = $('#modifyRecipeForm #steps li');
-		if (steps.size() === 1) {
-			steps.first().find('button[name="minus"]').css('visibility',
+		var lis = $('#modifyRecipeForm #'+ type + ' li');
+		if (lis.size() === 1) {
+			lis.first().find('button[name="minus"]').css('visibility',
 					'hidden');
-			steps.first().find('input').attr('name', 'step1');
-			steps.first().find('span[name="stepId"]').html('1');
+			lis.first().find('span[name="number"]').html('1');
 			return false;
 		}
 
-		steps.each(function(index) {
-			$(this).find('input').attr('name', 'step' + (index + 1));
-			$(this).find('span[name="stepId"]').html(index + 1);
+		lis.each(function(index) {
+			$(this).find('span[name="number"]').html(index + 1);
 			$(this).find('button[name="minus"]').css('visibility', 'visible');
 		});
 
@@ -161,12 +155,19 @@ $(function() {
 			return false;
 		}
 
+
+		return false;
+	};
+	
+	function onStepAddOrDel(){
+		return addOrDelLi('steps', $(this), $(stepLi));
+	};
+	
+	function onIngredientAddOrDel(){
+		addOrDelLi('ingredients', $(this), $(ingredientLi));
+		var ingredients = $('#modifyRecipeForm #ingredients li');
 		ingredients.each(function(index) {
 			var input = $(this).find('input');
-			input.attr('name', 'ingredient' + (index + 1));
-			$(this).find('span[name="ingredientId"]').html(index + 1);
-			$(this).find('button[name="minus"]').css('visibility', 'visible');
-
 			if (!input.hasClass('ui-autocomplete-input')) {
 				input.autocomplete({
 					source : ingredientsList,
@@ -178,9 +179,8 @@ $(function() {
 				});
 			}
 		});
-
 		return false;
-	};
+	}
 	
 	// a l init de la page
 	$(document).ready(function() {
@@ -189,4 +189,6 @@ $(function() {
 		$("#ingredients").on("click", "button", onIngredientAddOrDel);
 		$("#steps").on("click", "button", onStepAddOrDel);
 	});
+	
+	
 });
