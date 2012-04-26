@@ -8,6 +8,9 @@ import static org.junit.Assert.assertTrue;
 import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -45,7 +48,6 @@ public class RecipeDAOImplTest {
     private Ingredient jambon;
     private RecipeStep cuisson;
     private RecipeStep pret;
-    private RecipeStep couper;
     private byte[] image;
 
     protected void flushSession() throws Exception {
@@ -63,10 +65,8 @@ public class RecipeDAOImplTest {
         jambon.setLabel("jambon");
 
         cuisson = RecipeStep.builder().withLabel("faire cuire les pates")
-                .withOrder(2).build();
-        pret = RecipeStep.builder().withLabel("c'est pret").withOrder(5)
-                .build();
-        couper = RecipeStep.builder().withLabel("couper le pain").withOrder(1)
+                .withOrder(1).build();
+        pret = RecipeStep.builder().withLabel("c'est pret").withOrder(2)
                 .build();
 
         recipe = new Recipe();
@@ -125,7 +125,8 @@ public class RecipeDAOImplTest {
         Iterator<Ingredient> it = recipe.getIngredients().iterator();
         recipe2.addIngredient(it.next());
         recipe2.addIngredient(it.next());
-        recipe2.addRecipeStep(couper);
+        recipe2.addRecipeStep(RecipeStep.builder().withLabel("etape1")
+                .withOrder(1).build());
         recipeDAO.save(recipe2);
         assertEquals(2, recipe2.getIngredients().size());
         flushSession();
@@ -159,6 +160,8 @@ public class RecipeDAOImplTest {
         // recette2
         Recipe recipe2 = new Recipe();
         recipe2.setTitle("title2");
+        recipe2.addRecipeStep(RecipeStep.builder().withLabel("etape1")
+                .withOrder(1).build());
         Iterator<Ingredient> it = recipe.getIngredients().iterator();
 
         // les ingredients détachés
@@ -173,7 +176,6 @@ public class RecipeDAOImplTest {
         assertFalse(i1.getId().equals(i2.getId()));
         assertFalse(i1.equals(i2));
 
-        recipe2.addRecipeStep(couper);
         recipeDAO.save(recipe2);
         assertEquals(2, recipe2.getIngredients().size());
         flushSession();
@@ -229,8 +231,7 @@ public class RecipeDAOImplTest {
                 recipe.getId());
         // clean la session pour detacher les objets
         entityManager.clear();
-        searchedRecipe.setIngredients(new HashSet<Ingredient>());
-        searchedRecipe.getIngredients().add(jambon);
+        detachRecipe(searchedRecipe);
         searchedRecipe.getIngredients().add(pates);
         recipeDAO.merge(searchedRecipe);
         flushSession();
@@ -252,8 +253,7 @@ public class RecipeDAOImplTest {
                 recipe.getId());
         // clean de la session pour detacher les objets
         entityManager.clear();
-        searchedRecipe.setIngredients(new HashSet<Ingredient>());
-        searchedRecipe.getIngredients().add(jambon);
+        detachRecipe(searchedRecipe);
         // ajoute un nouvel ingredient (sans id)
         Ingredient pates = new Ingredient();
         pates.setLabel("pates");
@@ -283,10 +283,9 @@ public class RecipeDAOImplTest {
                 recipe.getId());
         // clean de la session et de la recette
         entityManager.clear();
-        searchedRecipe.setIngredients(new HashSet<Ingredient>());
+        detachRecipe(searchedRecipe);
         // ajoute un nouvel ingredient (avec id)
         searchedRecipe.getIngredients().add(salade);
-        searchedRecipe.getIngredients().add(jambon);
 
         recipeDAO.merge(searchedRecipe);
         flushSession();
@@ -296,7 +295,7 @@ public class RecipeDAOImplTest {
     }
 
     @Test
-    public void testUpdateRecipeWithDeletingDetachedIngredients()
+    public void testUpdateRecipeByDeletingDetachedIngredients()
             throws Exception {
         // enregistre la recette avec 2 ingredients (salade et jambon)
         Assert.assertNull(recipe.getId());
@@ -313,13 +312,54 @@ public class RecipeDAOImplTest {
                 recipe.getId());
         // clean de la session pour detacher la recette
         entityManager.clear();
-        // remplace la set list
-        searchedRecipe.setIngredients(new HashSet<Ingredient>());
-        searchedRecipe.getIngredients().add(jambon);
+        detachRecipe(searchedRecipe);
+        searchedRecipe.getIngredients().remove(salade);
         recipeDAO.merge(searchedRecipe);
         flushSession();
 
         recipe = recipeDAO.getEntity(Recipe.class, searchedRecipe.getId());
         Assert.assertEquals(1, recipe.getIngredients().size());
+    }
+
+    @Test
+    public void testUpdateRecipeWithNewFirstStep() throws Exception {
+        // enregistre la recette
+        Assert.assertNull(recipe.getId());
+        recipeDAO.save(recipe);
+        Assert.assertTrue(recipe.getId() > 0);
+
+        // load la recette a modifier
+        Recipe searchedRecipe = recipeDAO.getEntity(Recipe.class,
+                recipe.getId());
+        // clean de la session pour detacher la recette
+        entityManager.clear();
+        detachRecipe(searchedRecipe);
+        // changement de l ordre des etapes
+        searchedRecipe.getRecipeSteps().clear();
+        cuisson.setOrder(2);
+        pret.setOrder(3);
+        RecipeStep saler = RecipeStep.builder().withLabel("saler").withOrder(1)
+                .build();
+        searchedRecipe.addRecipeStep(saler);
+        searchedRecipe.addRecipeStep(cuisson);
+        searchedRecipe.addRecipeStep(pret);
+
+        // save and asserts
+        recipeDAO.merge(searchedRecipe);
+        flushSession();
+
+        recipe = recipeDAO.getEntity(Recipe.class, searchedRecipe.getId());
+        Assert.assertEquals(3, recipe.getRecipeSteps().size());
+
+    }
+
+    private void detachRecipe(Recipe r) {
+        Set<Ingredient> ingredients = new HashSet<Ingredient>();
+        ingredients.addAll(r.getIngredients());
+        r.setIngredients(ingredients);
+
+        SortedSet<RecipeStep> recipeSteps = new TreeSet<RecipeStep>();
+        recipeSteps.addAll(r.getRecipeSteps());
+        r.setRecipeSteps(recipeSteps);
     }
 }
