@@ -112,6 +112,35 @@ $(function() {
 		return false;
 	};
 	
+	// ajout ou suppression d une etape
+	function onStepAddOrDel() {
+		var button = $(this);
+		var steps = $('#modifyRecipeForm #steps li');
+
+		if (button.attr('name').indexOf('add') >= 0) {
+			$(stepLi).insertAfter(button.parent('li'));
+		} else {
+			button.parent('li').remove();
+		}
+
+		steps = $('#modifyRecipeForm #steps li');
+		if (steps.size() === 1) {
+			steps.first().find('button[name="minus"]').css('visibility',
+					'hidden');
+			steps.first().find('input').attr('name', 'step1');
+			steps.first().find('span[name="stepId"]').html('1');
+			return false;
+		}
+
+		steps.each(function(index) {
+			$(this).find('input').attr('name', 'step' + (index + 1));
+			$(this).find('span[name="stepId"]').html(index + 1);
+			$(this).find('button[name="minus"]').css('visibility', 'visible');
+		});
+
+		return false;
+	}
+	
 	// ajout ou suppression d un ingredient
 	function onIngredientAddOrDel() {
 		var button = $(this);
@@ -158,7 +187,6 @@ $(function() {
 		
 		$('#modifyRecipeForm > #submitButton').click(modifyRecipe);
 		$("#ingredients").on("click", "button", onIngredientAddOrDel);
-		/*$("#steps").on("click", "button", onStepAddOrDel);
-		*/
+		$("#steps").on("click", "button", onStepAddOrDel);
 	});
 });
