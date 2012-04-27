@@ -40,10 +40,16 @@ public class RecipeStep extends AbstractEntity implements
 
     @Override
     public int compareTo(RecipeStep o) {
-        if (order != null) {
+        if (order != null && o.getOrder() != null) {
             return order.compareTo(o.getOrder());
         }
-        return 1;
+        if (order != null) {
+            return 1;
+        }
+        if (o.getOrder() != null) {
+            return -1;
+        }
+        return 0;
     }
 
     public static Builder builder() {
