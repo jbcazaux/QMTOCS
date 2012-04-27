@@ -135,30 +135,7 @@ $(function() {
 		return false;
 	}
 	
-	// ajout ou suppression d un ingredient
-	function onIngredientAddOrDel() {
-		var button = $(this);
-		var ingredients = $('#modifyRecipeForm #ingredients li');
-
-		if (button.attr('name').indexOf('add') >= 0) {
-			$(ingredientLi).insertAfter(button.parent('li'));
-		} else {
-			button.parent('li').remove();
-		}
-
-		ingredients = $('#modifyRecipeForm #ingredients li');
-		if (ingredients.size() === 1) {
-			ingredients.first().find('button[name="minus"]').css('visibility',
-					'hidden');
-			ingredients.first().find('input').attr('name', 'ingredient1');
-			ingredients.first().find('span[name="ingredientId"]').html('1');
-			return false;
-		}
-
-
-		return false;
-	};
-	
+	//ajout ou suppression d une etape
 	function onStepAddOrDel(){
 		return addOrDelLi('steps', $(this), $(stepLi));
 	};
