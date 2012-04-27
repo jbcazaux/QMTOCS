@@ -54,7 +54,7 @@ public class RecipeController extends AbstractController {
         return id;
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}.jpg", method = RequestMethod.POST)
     public String attachPicture(@RequestParam("file") MultipartFile file,
             @PathVariable Integer id) throws IOException, ViolationException {
         if (!file.isEmpty()) {
