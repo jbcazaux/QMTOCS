@@ -20,7 +20,7 @@
 			<div class='blur'></div>
 			
 			<div  class='scrollable' data-scroll="y">
-				<img src='<%= img %>'></img>
+				<img src='recipe/<%= id %>.jpg' />
 	 			<hr /> 
 				
 				<div class='details'>
@@ -28,14 +28,14 @@
 						<span >Ingrédients: </span>
 						<span class='ingredientsList'>
 							<% for(var i=0; i<ingredients.length; i++) {%>
-							   <%= ingredients[i] %>,
+							   <%= ingredients[i].label %>,
 							<% } %>
 						</span>
 					</div>
 					<div class='recipe'>
 						<ul>
 							<% for(var i=0; i<recipeSteps.length; i++) {%>
-							   <li><%= recipeSteps[i] %></li>
+							   <li><%= recipeSteps[i].label %></li>
 							<% } %>
 						</ul>
 					</div>
