@@ -7,7 +7,10 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.Setter;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,9 +36,14 @@ public class RecipeController extends AbstractController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public Recipe getRecipe(@PathVariable int id) {
+    public Recipe getRecipe(@PathVariable int id, HttpServletResponse response) {
 
-        return recipeService.findById(id);
+        Recipe recipe = recipeService.findById(id);
+        if (recipe == null) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+        }
+
+        return recipe;
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -69,11 +77,20 @@ public class RecipeController extends AbstractController {
     }
 
     @RequestMapping(value = "/{id}.jpg", method = RequestMethod.GET)
-    @ResponseBody
-    public byte[] getPicture(@PathVariable int id, HttpServletResponse response) {
-        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
-        response.setHeader("Content-Disposition", "attachment");
-        return recipeService.findPictureById(id).getImage();
+    public ResponseEntity<byte[]> getPicture(@PathVariable int id) {
+
+        RecipePicture image = recipeService.findPictureById(id);
+        if (image == null) {
+            return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
+        }
+
+        byte[] imageAsBytes = image.getImage();
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setContentType(MediaType.IMAGE_JPEG);
+        responseHeaders.set("Content-Disposition", "attachment");
+        responseHeaders.setContentLength(imageAsBytes.length);
+        return new ResponseEntity<byte[]>(imageAsBytes, responseHeaders,
+                HttpStatus.OK);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)

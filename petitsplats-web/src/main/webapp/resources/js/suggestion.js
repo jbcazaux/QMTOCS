@@ -3,8 +3,11 @@ $( ".next" ).live('click', function(e){
 	var page = $(e.target).parents(":jqmData(role='page')");
 	var id = parseInt(page.attr('id').split("_").pop());
 	
-	console.log('change page to : suggestion_' + (id+1));
-	$.mobile.changePage($('#suggestion_' + (id+1)));
+	if ($('#suggestion_' + (id+1)).length > 0){
+		console.log('change page to : suggestion_' + (id+1));
+		$.mobile.changePage($('#suggestion_' + (id+1)));	
+	}
+	
 	return false;
 	
 });
@@ -14,13 +17,15 @@ $( ".prev" ).live('click', function(e){
 	var page = $(e.target).parents(":jqmData(role='page')");
 	var id = parseInt(page.attr('id').split("_").pop());
 	
-	console.log('change page to : suggestion_' + (id-1));
-	$.mobile.changePage($('#suggestion_' + (id-1)), {reverse: true});
+	if ($('#suggestion_' + (id-1)).length > 0){
+		console.log('change page to : suggestion_' + (id-1));
+		$.mobile.changePage($('#suggestion_' + (id-1)), {reverse: true});	
+	}
+	
+	
 	return false;
 	
 });
-
-
 
 
 function retrievePage(id){
@@ -29,9 +34,9 @@ function retrievePage(id){
 	
 	console.log('fetching: remote/' + id + '.json');
 	$.ajax({
-		  url: 'remote/' + id + '.json',
+		  url: 'recipe/' + id,
 		  success: function(data) {
-				var html =  new EJS({url: 'suggestion.ejs'}).render(data);
+				var html =  new EJS({url: 'ejs/suggestion.ejs'}).render(data);
 				$('body').append(html);
 				console.log('suggestion ' + id + ' loaded');
 			},
