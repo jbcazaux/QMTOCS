@@ -73,7 +73,7 @@ public class RecipeControllerTest {
         Recipe r = new Recipe();
         r.setId(12);
         when(recipeService.findById(r.getId())).thenReturn(r);
-        recipeController.getRecipe(r.getId());
+        recipeController.getRecipe(r.getId(), response);
         verify(recipeService, times(1)).findById(r.getId());
     }
 
