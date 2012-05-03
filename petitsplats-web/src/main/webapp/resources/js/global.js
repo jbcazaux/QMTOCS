@@ -5,6 +5,17 @@ function adjustHeight(scrollableView) {
 	}
 };
 
+function removeUrlBar(){
+	window.scrollTo( 0, 0);
+	var nPageH = $(document).height();
+	var nViewH = window.outerHeight;
+	if (nViewH > nPageH) {
+	  nViewH -= 250;
+	  $('BODY').css('height',nViewH + 'px');
+	}
+	window.scrollTo(0,1);
+}
+
 $( ":jqmData(role='page')" ).live( "pageshow", function(event) {
 	var $page = $( this );
 
@@ -27,40 +38,30 @@ $( ":jqmData(role='page')" ).live( "pageshow", function(event) {
 		}
 	});
 
+	removeUrlBar();
 	adjustHeight($('.ui-scrollview-clip', this));
 });
 
 $( window ).bind( "orientationchange", function( event ) {
 
-	window.scrollTo( 0, 0);
-	var nPageH = $(document).height();
-	 var nViewH = window.outerHeight;
-	 if (nViewH > nPageH) {
-	   nViewH -= 250;
-	   $('BODY').css('height',nViewH + 'px');
-	 }
-	 window.scrollTo(0,1);
-
+	removeUrlBar();
 	
 	setTimeout( function() {
-		
-		
-		$( ".ui-page-active .ui-title" ).html('size: ' + window.innerHeight);
 		adjustHeight($('.ui-scrollview-clip', $( ".ui-page-active" )));
 		}, 400 );
-	
 });
 
 $(document).ready(function(){
 	
-	window.scrollTo( 0, 0 );
-	var nPageH = $(document).height();
-	var nViewH = window.outerHeight;
-	if (nViewH > nPageH) {
-	  nViewH -= 250;
-	  $('BODY').css('height',nViewH + 'px');
-	}
-	window.scrollTo(0,1);
+	removeUrlBar();
+//	window.scrollTo( 0, 0 );
+//	var nPageH = $(document).height();
+//	var nViewH = window.outerHeight;
+//	if (nViewH > nPageH) {
+//	  nViewH -= 250;
+//	  $('BODY').css('height',nViewH + 'px');
+//	}
+//	window.scrollTo(0,1);
 	console.log('fetching: remote/' + 1 + '.json');
 	$.ajax({
 		  url: 'recipe/' + 1,
