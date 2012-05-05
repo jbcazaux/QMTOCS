@@ -1,6 +1,4 @@
-
-
-	<div id='suggestion_<%= id %>' class='suggestion' data-role="page" data-dom-cache="true">
+	<div id='suggestion_{{id}}' class='suggestion' data-role="page" data-dom-cache="true">
 
 		<div data-role="header">
 			<div>
@@ -12,7 +10,7 @@
 		<div data-role="content">
 			<div class='title'>
 				<a href="#" class='prev'></a>
-				<h2><%= title %></h2>
+				<h2>{{title}}</h2>
 				<a href="#" class='next'></a>
 			</div>
 			
@@ -20,30 +18,28 @@
 			<div class='blur'></div>
 			
 			<div  class='scrollable' data-scroll="y">
-				<img src='recipe/<%= id %>.jpg' />
+				<img src='recipe/{{id}}.jpg' />
 	 			<hr /> 
 				
 				<div class='details'>
 					<div class='ingredients'>
 						<span >Ingrédients: </span>
 						<span class='ingredientsList'>
-							<% for(var i=0; i<ingredients.length; i++) {%>
-							   <%= ingredients[i].label %>,
-							<% } %>
+							{{#ingredients}}
+							{{label}},
+							{{/ingredients}}
 						</span>
 					</div>
 					<div class='recipe'>
 						<ul>
-							<% for(var i=0; i<recipeSteps.length; i++) {%>
-							   <li><%= recipeSteps[i].label %></li>
-							<% } %>
+							{{#recipeSteps}}
+							<li>{{label}}</li>
+							{{/recipeSteps}}
 						</ul>
 					</div>
 				</div>
 			</div>
 			
 		</div>
-
-
-	</div>
+</div>
 

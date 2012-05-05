@@ -36,12 +36,11 @@ function retrievePage(id){
 	$.ajax({
 		  url: 'recipe/' + id,
 		  success: function(data) {
-				var html =  new EJS({url: 'ejs/suggestion.ejs'}).render(data);
-				$('body').append(html);
+			  	createPage(data);
 				console.log('suggestion ' + id + ' loaded');
 			},
 		  error: function (jqXHR, textStatus, errorThrown){
-			  console.log('erreur... ' + textStatus);
+			  console.log('erreur a la recuperation de la recette... ' + textStatus);
 		  	},	
 		  dataType: 'json',
 		  cache:false
