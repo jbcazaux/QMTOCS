@@ -62,7 +62,9 @@ function createPage(data){
 
 function getRecipeData( id ){
 
-    return localStorage[ id ] || $.ajax({
+	if (localStorage[ id ]) return JSON.parse(localStorage[ id ]);
+	
+    return $.ajax({
 		  url: 'recipe/' + id,
 		  success: function(data) {
 			  	localStorage[id] = JSON.stringify(data);
