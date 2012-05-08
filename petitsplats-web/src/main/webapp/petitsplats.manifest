@@ -1,0 +1,32 @@
+CACHE MANIFEST
+ 
+# Version 0.0.3
+
+#pages 
+index.html
+suggestion.html
+
+#js
+js/libs/jquery-1.7.1.min.js
+js/libs/jquery.mobile-1.0.1.min.js
+js/libs/jquery.easing.1.3.js
+js/libs/jquery.mobile.scrollview.js
+js/libs/mustache.js
+js/global.js
+js/suggestion.js
+
+#css
+css/jquery.mobile-1.0.1.min.css
+css/style.css
+css/global.css
+css/home.css
+css/suggestion.css
+css/jquery.mobile.scrollview.css
+
+#img
+img/question.jpg
+css/images/ajax-loader.png
+css/images/icons-18-white.png
+
+NETWORK:
+*

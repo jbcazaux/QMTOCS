@@ -58,26 +58,30 @@ function createPage(data){
 	});
 };
 
+
+
+function getRecipeData( id ){
+
+    return localStorage[ id ] || $.ajax({
+		  url: 'recipe/' + id,
+		  success: function(data) {
+			  	localStorage[id] = JSON.stringify(data);
+		  },
+		  dataType: 'json',
+		  cache:false
+		});
+};
+
 $(document).ready(function(){
 	
 	removeUrlBar();
-
-	console.log('fetching: remote/' + 1 + '.json');
-	$.ajax({
-		  url: 'recipe/' + 1,
-		  success: function(data) {
-			  
-			  createPage(data);
-			  
-			  $('.home_suggestion').on('click', function (){
-				  $.mobile.changePage($('#suggestion_1'));
-			  });
-			},
-		  error: function (jqXHR, textStatus, errorThrown){
-			  console.log('erreur... ' + textStatus);
-		  	},	
-		  dataType: 'json',
-		  cache:false
-		}); 
-	 
+	var id = 1;
+	console.log('fetching: remote/' + id + '.json');
+	
+	$.when(getRecipeData(id)).then(function(data){
+		  createPage(data);
+		  $('.home_suggestion').on('click', function (){
+			  $.mobile.changePage($('#suggestion_1'));
+		  });
+	});
 });

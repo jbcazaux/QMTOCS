@@ -27,24 +27,15 @@ $( ".prev" ).live('click', function(e){
 	
 });
 
-
 function retrievePage(id){
 	
 	if (isNaN(id)) return;
 	
 	console.log('fetching: remote/' + id + '.json');
-	$.ajax({
-		  url: 'recipe/' + id,
-		  success: function(data) {
-			  	createPage(data);
-				console.log('suggestion ' + id + ' loaded');
-			},
-		  error: function (jqXHR, textStatus, errorThrown){
-			  console.log('erreur a la recuperation de la recette... ' + textStatus);
-		  	},	
-		  dataType: 'json',
-		  cache:false
-		});
+
+	$.when(getRecipeData(id)).then(function(data){
+		createPage(data);
+	});
 };
 
 $( ":jqmData(role='page')" ).live( "pageshow", function(event) {
