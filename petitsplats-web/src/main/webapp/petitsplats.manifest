@@ -1,6 +1,6 @@
 CACHE MANIFEST
  
-# Version 0.0.3
+# Version 0.0.1
 
 #pages 
 index.html
@@ -12,8 +12,8 @@ js/libs/jquery.mobile-1.0.1.min.js
 js/libs/jquery.easing.1.3.js
 js/libs/jquery.mobile.scrollview.js
 js/libs/mustache.js
-js/global.js
-js/suggestion.js
+#js/global.js
+#js/suggestion.js
 
 #css
 css/jquery.mobile-1.0.1.min.css
