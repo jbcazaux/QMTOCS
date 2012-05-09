@@ -4,6 +4,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
+
 import org.springframework.stereotype.Repository;
 
 import fr.petitsplats.domain.Ingredient;
@@ -56,6 +59,20 @@ public class RecipeDAOImpl extends AbstractDAO implements RecipeDAO {
         if (recipe.getIngredients().size() != size) {
             throw new RuntimeException("C'est la merde");
         }
+    }
+
+    @Override
+    public Recipe getLastRecipe() {
+        Query q = getEntityManager().createQuery("select max (id) from Recipe");
+
+        Recipe recipe = null;
+        try {
+            Integer id = (Integer) q.getSingleResult();
+            recipe = this.getEntity(Recipe.class, id);
+        } catch (NoResultException nre) {
+            getLogger().info("no result found");
+        }
+        return recipe;
     }
 
 }

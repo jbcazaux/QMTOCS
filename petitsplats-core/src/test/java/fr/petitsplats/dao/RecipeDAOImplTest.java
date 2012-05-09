@@ -353,6 +353,28 @@ public class RecipeDAOImplTest {
 
     }
 
+    @Test
+    public void testGetLastRecipe() throws Exception {
+
+        // recette1
+        recipeDAO.save(recipe);
+        flushSession();
+
+        // recette2
+        Recipe recipe2 = new Recipe();
+        recipe2.setTitle("title2");
+        recipe2.addIngredient(jambon);
+        recipe2.addRecipeStep(RecipeStep.builder().withLabel("step")
+                .withOrder(1).build());
+
+        recipeDAO.save(recipe2);
+        flushSession();
+
+        // asserts
+        assertEquals(recipe2.getId(), recipeDAO.getLastRecipe().getId());
+
+    }
+
     private void detachRecipe(Recipe r) {
         Set<Ingredient> ingredients = new HashSet<Ingredient>();
         ingredients.addAll(r.getIngredients());
@@ -362,4 +384,5 @@ public class RecipeDAOImplTest {
         recipeSteps.addAll(r.getRecipeSteps());
         r.setRecipeSteps(recipeSteps);
     }
+
 }

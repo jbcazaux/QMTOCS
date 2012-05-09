@@ -62,12 +62,12 @@ function createPage(data){
 
 function getRecipeData( id ){
 
-	if (localStorage[ id ]) return JSON.parse(localStorage[ id ]);
+	if (id && localStorage[ id ]) return JSON.parse(localStorage[ id ]);
 	
     return $.ajax({
-		  url: 'recipe/' + id,
+		  url: 'recipe/' + (id ? id : ''),
 		  success: function(data) {
-			  	localStorage[id] = JSON.stringify(data);
+			  	localStorage[data.id] = JSON.stringify(data);
 		  },
 		  dataType: 'json',
 		  cache:false
@@ -77,13 +77,12 @@ function getRecipeData( id ){
 $(document).ready(function(){
 	
 	removeUrlBar();
-	var id = 1;
-	console.log('fetching: remote/' + id + '.json');
 	
-	$.when(getRecipeData(id)).then(function(data){
+	$.when(getRecipeData()).then(function(data){
 		  createPage(data);
 		  $('.home_suggestion').on('click', function (){
-			  $.mobile.changePage($('#suggestion_1'));
+			  var page = $('.suggestion').first();
+			  $.mobile.changePage(page);
 		  });
 	});
 });

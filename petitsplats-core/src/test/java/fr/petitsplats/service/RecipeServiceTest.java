@@ -264,4 +264,10 @@ public class RecipeServiceTest {
         verify(ingredientService, times(1)).findByLabel(i.getLabel());
     }
 
+    @Test
+    public void testFindLastRecipe() throws Exception {
+        recipeService.findLastRecipe();
+        verify(recipeDAO, times(1)).getLastRecipe();
+    }
+
 }

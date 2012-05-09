@@ -7,4 +7,6 @@ public interface RecipeDAO extends DataAccessObject {
     public Recipe merge(Recipe recipe);
 
     public Recipe save(Recipe recipe);
+
+    public Recipe getLastRecipe();
 }

@@ -46,6 +46,18 @@ public class RecipeController extends AbstractController {
         return recipe;
     }
 
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @ResponseBody
+    public Recipe getLastRecipe(HttpServletResponse response) {
+
+        Recipe recipe = recipeService.findLastRecipe();
+        if (recipe == null) {
+            response.setStatus(HttpStatus.NOT_FOUND.value());
+        }
+
+        return recipe;
+    }
+
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public int createRecipe(@RequestBody Recipe recipe,

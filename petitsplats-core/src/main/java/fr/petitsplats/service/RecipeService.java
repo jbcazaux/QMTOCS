@@ -95,4 +95,8 @@ public class RecipeService {
             }
         }
     }
+
+    public Recipe findLastRecipe() {
+        return recipeDAO.getLastRecipe();
+    }
 }

@@ -1,31 +1,32 @@
-$( ".next" ).live('click', function(e){
+$( ".prev" ).live('click', function(e){
 	
 	var page = $(e.target).parents(":jqmData(role='page')");
 	var id = parseInt(page.attr('id').split("_").pop());
 	
 	if ($('#suggestion_' + (id+1)).length > 0){
 		console.log('change page to : suggestion_' + (id+1));
-		$.mobile.changePage($('#suggestion_' + (id+1)));	
+		$.mobile.changePage($('#suggestion_' + (id+1)), {reverse: true});	
 	}
 	
 	return false;
 	
 });
 
-$( ".prev" ).live('click', function(e){
+$( ".next" ).live('click', function(e){
 	
 	var page = $(e.target).parents(":jqmData(role='page')");
 	var id = parseInt(page.attr('id').split("_").pop());
 	
 	if ($('#suggestion_' + (id-1)).length > 0){
 		console.log('change page to : suggestion_' + (id-1));
-		$.mobile.changePage($('#suggestion_' + (id-1)), {reverse: true});	
+		$.mobile.changePage($('#suggestion_' + (id-1)));	
 	}
 	
 	
 	return false;
 	
 });
+
 
 function retrievePage(id){
 	
