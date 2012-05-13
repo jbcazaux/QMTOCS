@@ -60,13 +60,5 @@ $( ":jqmData(role='page')" ).live( "pageshow", function(event) {
 		$page.bind("swiperight", function(){
 			goToRecipe(id + 1, true);
 		});
-//		$page.find( ".scrollable" ).first().bind("swipeleft", function(){
-//			console.log('swipe left');
-//			goToRecipe(id - 1, false);
-//		});
-//		$page.find( ".scrollable" ).first().bind("swiperight", function(){
-//			console.log('swipe right');
-//			goToRecipe(id + 1, true);
-//		});
 	}
 });
