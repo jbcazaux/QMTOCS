@@ -15,6 +15,7 @@ import org.springframework.util.CollectionUtils;
 import fr.petitsplats.dao.RecipeDAO;
 import fr.petitsplats.domain.Ingredient;
 import fr.petitsplats.domain.Recipe;
+import fr.petitsplats.domain.RecipeIngredient;
 import fr.petitsplats.domain.RecipePicture;
 import fr.petitsplats.exception.FunctionnalException;
 import fr.petitsplats.exception.ViolationException;
@@ -85,12 +86,13 @@ public class RecipeService {
      * @param recipe
      */
     private void reattachIdLessIngredients(Recipe recipe) {
-        for (Ingredient ingredient : recipe.getIngredients()) {
-            if (ingredient.getId() == null || ingredient.getId() == 0) {
-                Ingredient i = ingredientService.findByLabel(ingredient
-                        .getLabel());
+        for (RecipeIngredient recipeIngredient : recipe.getRecipeIngredients()) {
+            if (recipeIngredient.getIngredient().getId() == null
+                    || recipeIngredient.getIngredient().getId() == 0) {
+                Ingredient i = ingredientService.findByLabel(recipeIngredient
+                        .getIngredient().getLabel());
                 if (i != null) {
-                    ingredient.setId(i.getId());
+                    recipeIngredient.setIngredient(i);
                 }
             }
         }

@@ -24,6 +24,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import fr.petitsplats.dao.RecipeDAO;
 import fr.petitsplats.domain.Ingredient;
 import fr.petitsplats.domain.Recipe;
+import fr.petitsplats.domain.RecipeIngredient;
 import fr.petitsplats.domain.RecipePicture;
 import fr.petitsplats.exception.ViolationException;
 
@@ -99,13 +100,14 @@ public class RecipeServiceTest {
         ii.setLabel("ingredient1");
 
         Recipe r = new Recipe();
-        r.addIngredient(i);
+        r.addIngredient(new RecipeIngredient(i, "200g"));
 
         when(ingredientService.findByLabel(i.getLabel())).thenReturn(ii);
 
         recipeService.createRecipe(r);
 
-        assertEquals(ii.getId(), r.getIngredients().iterator().next().getId());
+        assertEquals(ii.getId(), r.getRecipeIngredients().iterator().next()
+                .getIngredient().getId());
         verify(recipeDAO, times(1)).save(r);
         verify(ingredientService, times(1)).findByLabel(i.getLabel());
     }
@@ -119,11 +121,12 @@ public class RecipeServiceTest {
         i.setLabel("ingredient1");
 
         Recipe r = new Recipe();
-        r.addIngredient(i);
+        r.addIngredient(new RecipeIngredient(i, "200g"));
 
         recipeService.createRecipe(r);
 
-        assertEquals(i.getId(), r.getIngredients().iterator().next().getId());
+        assertEquals(i.getId(), r.getRecipeIngredients().iterator().next()
+                .getIngredient().getId());
         verify(recipeDAO, times(1)).save(r);
         verify(ingredientService, times(0)).findByLabel(Mockito.anyString());
     }
@@ -253,13 +256,14 @@ public class RecipeServiceTest {
 
         Recipe r = new Recipe();
         r.setId(1);
-        r.addIngredient(i);
+        r.addIngredient(new RecipeIngredient(i, "amount"));
 
         when(ingredientService.findByLabel(i.getLabel())).thenReturn(ii);
 
         recipeService.updateRecipe(r);
 
-        assertEquals(ii.getId(), r.getIngredients().iterator().next().getId());
+        assertEquals(ii.getId(), r.getRecipeIngredients().iterator().next()
+                .getIngredient().getId());
         verify(recipeDAO, times(1)).merge(r);
         verify(ingredientService, times(1)).findByLabel(i.getLabel());
     }

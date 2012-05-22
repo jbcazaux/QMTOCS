@@ -14,7 +14,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -46,12 +45,12 @@ public class Recipe extends AbstractEntity {
     @Getter
     @Setter
     @NotEmpty
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(name = "recipe_ingredients", joinColumns = { @JoinColumn(name = "recipe_id", referencedColumnName = "recipe_id") }, inverseJoinColumns = { @JoinColumn(name = "ingredient_id", referencedColumnName = "ingredient_id") })
-    private Set<Ingredient> ingredients = new HashSet<Ingredient>();
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "pk.recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<RecipeIngredient> recipeIngredients = new HashSet<RecipeIngredient>();
 
-    public void addIngredient(Ingredient i) {
-        ingredients.add(i);
+    public void addIngredient(RecipeIngredient i) {
+        i.setRecipe(this);
+        recipeIngredients.add(i);
     }
 
     @Getter

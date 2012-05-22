@@ -117,24 +117,33 @@ $(function() {
 			};
 		});
 
-		var ingredients = new Array();
+		var recipeIngredients = new Array();
 		$('input[name^="ingredient"]').each(function(index) {
 			var ingredient = {
 				label : $(this).val(),
 				id : ($(this).attr('data-id') ? $(this).attr('data-id') : '')
 			};
+			var recipeIngredient = {
+				'ingredient': ingredient,
+				'amount': "100g"
+			};
+			
 			if (ingredient.label) {
-				ingredients.push(ingredient);
-			}
-			;
+				recipeIngredients.push(recipeIngredient);
+			};
 		});
 
 		var recipe = {
 			'title' : $('#createRecipeForm > input[name="title"]').val(),
 			'recipeSteps' : steps,
-			'ingredients' : ingredients
+			'recipeIngredients' : recipeIngredients
 		};
+		
+		/*for (var i in recipe.recipeIngredients){
+			recipe.recipeIngredients[i]['recipe'] = recipe;
+		}*/
 
+		var json = JSON.stringify(recipe);
 		$.ajax({
 			url : "recipe",
 			type : "POST",

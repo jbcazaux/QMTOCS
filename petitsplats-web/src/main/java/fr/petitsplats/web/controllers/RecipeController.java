@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import fr.petitsplats.MethodNotAllowedException;
 import fr.petitsplats.domain.Recipe;
+import fr.petitsplats.domain.RecipeIngredient;
 import fr.petitsplats.domain.RecipePicture;
 import fr.petitsplats.exception.ViolationException;
 import fr.petitsplats.service.RecipeService;
@@ -66,6 +67,11 @@ public class RecipeController extends AbstractController {
 
         if (recipe.getId() != null && recipe.getId() != 0) {
             throw new MethodNotAllowedException();
+        }
+
+        // reatach recipe
+        for (RecipeIngredient ri : recipe.getRecipeIngredients()) {
+            ri.setRecipe(recipe);
         }
 
         int id = recipeService.createRecipe(recipe);
