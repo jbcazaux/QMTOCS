@@ -25,9 +25,9 @@
 					<div class='ingredients'>
 						<span >Ingrédients: </span>
 						<span class='ingredientsList'>
-							{{#ingredients}}
-							{{label}},
-							{{/ingredients}}
+							{{#recipeIngredients}}
+							{{ingredient.label}} ({{amount}}),
+							{{/recipeIngredients}}
 						</span>
 					</div>
 					<div class='recipe'>

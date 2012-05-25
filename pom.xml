@@ -20,7 +20,7 @@
 	</scm>
 
 	<properties>
-		<jdk.version>1.6</jdk.version>
+		<jdk.version>1.7</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<buildNumber>${maven.build.timestamp}</buildNumber>
@@ -39,7 +39,7 @@
 		<junit.version>4.10</junit.version>
 		<mockito.version>1.9.0</mockito.version>
 		<spring.version>3.1.1.RELEASE</spring.version>
-		<jackson.version>1.9.6</jackson.version>
+		<jackson.version>1.9.7</jackson.version>
 		<commons-dbcp.version>1.4</commons-dbcp.version>
 		<mysql.version>5.1.18</mysql.version>
 		<hsqldb.version>2.2.8</hsqldb.version>

@@ -139,7 +139,7 @@ public class RecipeServiceTest {
         when(recipeDAO.getEntity(Recipe.class, r.getId())).thenReturn(r);
 
         recipeService.findById(r.getId());
-        verify(recipeDAO, times(1)).getEntity(Recipe.class, r.getId());
+        verify(recipeDAO, times(1)).getRecipeById(r.getId());
     }
 
     @Test
@@ -147,7 +147,7 @@ public class RecipeServiceTest {
         int id = 14;
         when(recipeDAO.getEntity(Recipe.class, id)).thenReturn(null);
         recipeService.findById(id);
-        verify(recipeDAO, times(1)).getEntity(Recipe.class, id);
+        verify(recipeDAO, times(1)).getRecipeById(id);
     }
 
     @Test

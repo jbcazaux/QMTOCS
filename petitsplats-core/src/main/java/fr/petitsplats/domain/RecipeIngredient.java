@@ -36,28 +36,6 @@ public class RecipeIngredient implements Serializable {
     @EmbeddedId
     private RecipeIngredientId pk = new RecipeIngredientId();
 
-    /*
-     * @Id
-     * 
-     * @Getter
-     * 
-     * @Setter // @NotNull
-     * 
-     * @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-     * 
-     * @JoinColumn(name = "ingredient_id") private Ingredient ingredient;
-     * 
-     * @Id
-     * 
-     * @Getter
-     * 
-     * @Setter // @NotNull
-     * 
-     * @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-     * 
-     * @JoinColumn(name = "recipe_id") private Recipe recipe;
-     */
-
     @Transient
     public Recipe getRecipe() {
         return getPk().getRecipe();

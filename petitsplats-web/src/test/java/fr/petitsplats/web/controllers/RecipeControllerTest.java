@@ -78,6 +78,15 @@ public class RecipeControllerTest {
     }
 
     @Test
+    public void testGetUnknownRecipe() throws Exception {
+        Recipe r = new Recipe();
+        r.setId(12);
+        when(recipeService.findById(r.getId())).thenReturn(null);
+        recipeController.getRecipe(r.getId(), response);
+        verify(recipeService, times(1)).findById(r.getId());
+    }
+
+    @Test
     public void testUpdateInsteadOfCreate() {
         Recipe r = new Recipe();
         r.setId(0);

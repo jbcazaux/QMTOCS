@@ -51,7 +51,7 @@ public class RecipeService {
     }
 
     public Recipe findById(Integer id) {
-        return recipeDAO.getEntity(Recipe.class, id);
+        return recipeDAO.getRecipeById(id);
     }
 
     public Integer createRecipePicture(RecipePicture recipePicture)

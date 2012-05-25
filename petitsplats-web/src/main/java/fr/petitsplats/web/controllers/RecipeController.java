@@ -42,6 +42,12 @@ public class RecipeController extends AbstractController {
         Recipe recipe = recipeService.findById(id);
         if (recipe == null) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
+            return null;
+        }
+
+        // hack to prevent cyclic reference in json
+        for (RecipeIngredient ri : recipe.getRecipeIngredients()) {
+            ri.setRecipe(null);
         }
 
         return recipe;
@@ -54,6 +60,10 @@ public class RecipeController extends AbstractController {
         Recipe recipe = recipeService.findLastRecipe();
         if (recipe == null) {
             response.setStatus(HttpStatus.NOT_FOUND.value());
+        }
+        // hack to prevent cyclic reference in json
+        for (RecipeIngredient ri : recipe.getRecipeIngredients()) {
+            ri.setRecipe(null);
         }
 
         return recipe;
@@ -69,7 +79,7 @@ public class RecipeController extends AbstractController {
             throw new MethodNotAllowedException();
         }
 
-        // reatach recipe
+        // reatach recipe (not done in json to prevent cyclic reference)
         for (RecipeIngredient ri : recipe.getRecipeIngredients()) {
             ri.setRecipe(recipe);
         }
@@ -119,6 +129,11 @@ public class RecipeController extends AbstractController {
         if (recipe.getId() != id || recipe.getId() == 0
                 || recipe.getId() == null) {
             throw new MethodNotAllowedException();
+        }
+
+        // reatach recipe (not done in json to prevent cyclic reference)
+        for (RecipeIngredient ri : recipe.getRecipeIngredients()) {
+            ri.setRecipe(recipe);
         }
 
         recipeService.updateRecipe(recipe);

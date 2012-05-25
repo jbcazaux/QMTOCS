@@ -17,6 +17,7 @@ import javax.validation.ConstraintViolationException;
 import junit.framework.Assert;
 
 import org.apache.commons.io.IOUtils;
+import org.hibernate.proxy.HibernateProxy;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -480,6 +481,7 @@ public class RecipeDAOImplTest {
         // recette1
         recipeDAO.save(recipe);
         flushSession();
+        entityManager.clear();
 
         // recette2
         Recipe recipe2 = new Recipe();
@@ -490,10 +492,10 @@ public class RecipeDAOImplTest {
 
         recipeDAO.save(recipe2);
         flushSession();
+        entityManager.clear();
 
         // asserts
         assertEquals(recipe2.getId(), recipeDAO.getLastRecipe().getId());
-
     }
 
     private Recipe detachRecipe(Recipe r) {
@@ -517,6 +519,33 @@ public class RecipeDAOImplTest {
         detachedRecipe.setRecipeSteps(recipeSteps);
 
         return detachedRecipe;
+
+    }
+
+    @Test
+    public void testGetRecipeById() throws Exception {
+        // recette1
+        recipeDAO.save(recipe);
+        flushSession();
+        entityManager.clear();
+
+        Recipe fullRecipe = recipeDAO.getRecipeById(recipe.getId());
+        entityManager.clear();
+
+        assertEquals(recipe.getId(), fullRecipe.getId());
+        for (RecipeIngredient ri : fullRecipe.getRecipeIngredients()) {
+            assertFalse(ri.getPk().getIngredient() instanceof HibernateProxy);
+        }
+    }
+
+    @Test
+    public void testGetRecipeByUnknownId() throws Exception {
+
+        Integer unknownId = new Integer(12345);
+        Recipe notFoundRecipe = recipeDAO.getRecipeById(unknownId);
+        entityManager.clear();
+
+        assertNull(notFoundRecipe);
 
     }
 

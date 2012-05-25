@@ -30,10 +30,6 @@ public class RecipeDAOImpl extends AbstractDAO implements RecipeDAO {
     }
 
     /**
-     * Cette méthode ne peut être appelée que sur une recette détachée de la
-     * session, sinon bug hibernate: impossible de supprimer l ingredient de la
-     * liste.
-     * 
      * @param recipe
      */
     private void reatachIngredients(Recipe recipe) {
@@ -59,10 +55,41 @@ public class RecipeDAOImpl extends AbstractDAO implements RecipeDAO {
         Recipe recipe = null;
         try {
             Integer id = (Integer) q.getSingleResult();
-            recipe = this.getEntity(Recipe.class, id);
+            recipe = this.getRecipeById(id);
         } catch (NoResultException nre) {
             getLogger().info("no result found");
         }
+        return recipe;
+    }
+
+    public Recipe getRecipeById(Integer recipeId) {
+        Query q = getEntityManager().createQuery(
+                "select r from Recipe as r "
+                        + "left join fetch r.recipeIngredients as ri "
+                        + "left join fetch ri.pk as pk "
+                        + "left join fetch pk.ingredient "
+                        + "left join fetch r.recipeSteps as rs "
+                        + "where r.id = :recipeId");
+
+        q.setParameter("recipeId", recipeId);
+
+        Recipe recipe = null;
+        try {
+            recipe = (Recipe) q.getSingleResult();
+        } catch (NoResultException nre) {
+            getLogger().info("no result found");
+            return null;
+        }
+        return initializeAndUnproxyRecipe(recipe);
+    }
+
+    private Recipe initializeAndUnproxyRecipe(Recipe recipe) {
+
+        recipe = initializeAndUnproxy(recipe);
+        for (RecipeIngredient ri : recipe.getRecipeIngredients()) {
+            ri.setIngredient(initializeAndUnproxy(ri.getPk().getIngredient()));
+        }
+
         return recipe;
     }
 

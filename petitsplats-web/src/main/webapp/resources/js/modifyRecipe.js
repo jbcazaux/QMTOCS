@@ -6,7 +6,7 @@ $.urlParam = function(name){
 };
 
 $(function() {
-	var ingredientLi = "<li>ingrédient <span name='number'></span><button name='minus' style='visibility: hidden'>-</button><input type='text' /><button name='add'>+</button></li>";
+	var ingredientLi = "<li>ingrédient&nbsp;<span name='ingredientId'></span><button name='minus'>-</button><input type='text' name='ingredient' class='ingredient' />, quantité: <input type='text' class='amount' /><button name='add'>+</button></li>";
 	var stepLi = "<li>etape <span name='number'></span><button name='minus' style='visibility: hidden'>-</button><input type='text' /><button name='add'>+</button></li>";
 	
 	// liste des ingrédients pour l autocompletion
@@ -31,14 +31,14 @@ $(function() {
 		$('#title').val(r.title);
 		$('#id').html(r.id);
 		//liste les ingrédients
-		$.each(r.ingredients, function(index, i){
+		$.each(r.recipeIngredients, function(index, ri){
 			$('#ingredients').append($(ingredientLi));
 			var li = $('#ingredients li').last();
 			li.find('span[name="number').html(index + 1);
-			var input = li.find('input');
-			input.val(i.label);
-			input.attr('data-id', i.id);
-			input.autocomplete({
+			var inputName = li.find('input.ingredient');
+			inputName.val(ri.ingredient.label);
+			inputName.attr('data-id', ri.ingredient.id);
+			inputName.autocomplete({
 				source : ingredientsList,
 				minLength : 2,
 				change : function(event, ui) {
@@ -46,7 +46,10 @@ $(function() {
 					$(this).attr('data-id', id);
 				}
 			});
-			if (r.ingredients.length > 1){
+			var inputAmount = li.find('input.amount');
+			inputAmount.val(ri.amount);
+			
+			if (r.recipeIngredients.length > 1){
 				li.find('button[name="minus"]').css('visibility', 'visible');
 			}
 		});
@@ -78,21 +81,26 @@ $(function() {
 			};
 		});
 
-		var ingredients = new Array();
-		$('#ingredients input').each(function(index) {
+		var recipeIngredients = new Array();
+		$('#ingredients input.ingredient').each(function(index) {
 			var ingredient = {
 				label : $(this).val(),
 				id : ($(this).attr('data-id') ? $(this).attr('data-id') : '')
 			};
+			var recipeIngredient = {
+				'ingredient': ingredient,
+				'amount': $('.amount', $(this).parent('li')).val()
+			};
+			
 			if (ingredient.label) {
-				ingredients.push(ingredient);
+				recipeIngredients.push(recipeIngredient);
 			};
 		});
 
 		var recipe = {
 			'title' : $('#modifyRecipeForm > #title').val(),
 			'recipeSteps' : steps,
-			'ingredients' : ingredients,
+			'recipeIngredients' : recipeIngredients,
 			'id' : $('#id').html()
 		};
 

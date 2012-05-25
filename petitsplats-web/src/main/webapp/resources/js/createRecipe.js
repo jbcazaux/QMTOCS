@@ -31,7 +31,7 @@ $(function() {
 
 	// les templates des li qui sont ajoutées
 	var stepLi = "<li>etape <span name='stepId'></span><button name='minus'>-</button><input type='text' name='step' /><button name='add'>+</button></li>";
-	var ingredientLi = "<li>ingrédient <span name='ingredientId'></span><button name='minus'>-</button><input type='text' name='ingredient' /><button name='add'>+</button></li>";
+	var ingredientLi = "<li>ingrédient&nbsp;<span name='ingredientId'></span><button name='minus'>-</button><input type='text' name='ingredient' class='ingredient' />, quantité: <input type='text' class='amount' /><button name='add'>+</button></li>";
 
 	// ajout ou suppression d une etape
 	function onStepAddOrDel() {
@@ -77,13 +77,13 @@ $(function() {
 		if (ingredients.size() === 1) {
 			ingredients.first().find('button[name="minus"]').css('visibility',
 					'hidden');
-			ingredients.first().find('input').attr('name', 'ingredient1');
+			ingredients.first().find('input .ingredient').attr('name', 'ingredient1');
 			ingredients.first().find('span[name="ingredientId"]').html('1');
 			return false;
 		}
 
 		ingredients.each(function(index) {
-			var input = $(this).find('input');
+			var input = $(this).find('input .ingredient');
 			input.attr('name', 'ingredient' + (index + 1));
 			$(this).find('span[name="ingredientId"]').html(index + 1);
 			$(this).find('button[name="minus"]').css('visibility', 'visible');
@@ -125,7 +125,7 @@ $(function() {
 			};
 			var recipeIngredient = {
 				'ingredient': ingredient,
-				'amount': "100g"
+				'amount': $('.amount', $(this).parent('li')).val()
 			};
 			
 			if (ingredient.label) {

@@ -5,6 +5,8 @@ import java.io.Serializable;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.hibernate.Hibernate;
+import org.hibernate.proxy.HibernateProxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,5 +49,18 @@ public class AbstractDAO implements DataAccessObject {
             getLogger().info(sb.toString());
         }
         return entity;
+    }
+
+    protected static <T> T initializeAndUnproxy(T var) {
+        if (var == null) {
+            throw new IllegalArgumentException("passed argument is null");
+        }
+
+        Hibernate.initialize(var);
+        if (var instanceof HibernateProxy) {
+            var = (T) ((HibernateProxy) var).getHibernateLazyInitializer()
+                    .getImplementation();
+        }
+        return var;
     }
 }
